@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import history from '../../history';
 import { connect } from 'react-redux';
+import { sha256 } from 'js-sha256';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 import './login.scss';
 
@@ -54,30 +55,30 @@ class Login extends Component{
         e.preventDefault();
         const user = {
             email: this.state.email,
-            password: this.state.password
+            password: sha256(this.state.password)
         }
         console.log(user);
 
-        // axios.post("http://localhost:5000/users/login",user)
-        //     .then(res => {
-        //         console.log(res.data[0].username);
-        //         if(res.data.length === 1){
-        //             if(user.username === "admin"){
-        //                 history.push('/exercise');
-        //             }
-        //             else{
-        //                 this.props.setUser(user.username);
-        //                 history.push('/exer_list_user');
-        //             }
-        //         }
-        //         else{
-        //             alert("Incorrect username or password");
-        //         }
-        //     })
-        //     .catch(function(error){
-        //         alert("Something went wrong");
-        //         console.log(error);
-        //     });
+        axios.post("http://localhost:5000/users/login",user)
+            .then(res => {
+                console.log(res.data[0].username);
+                if(res.data.length === 1){
+                    if(user.username === "admin"){
+                        history.push('/exercise');
+                    }
+                    else{
+                        this.props.setUser(user.username);
+                        history.push('/exer_list_user');
+                    }
+                }
+                else{
+                    alert("Incorrect username or password");
+                }
+            })
+            .catch(function(error){
+                alert("Something went wrong");
+                console.log(error);
+            });
         this.setState({
             email: "",
             password: ""
@@ -87,31 +88,31 @@ class Login extends Component{
         e.preventDefault();
         const user = {
             email: this.state.email,
-            password: this.state.password,
+            password: sha256(this.state.password),
             name: this.state.name
         }
         console.log(user);
 
-        // axios.post("http://localhost:5000/users/login",user)
-        //     .then(res => {
-        //         console.log(res.data[0].username);
-        //         if(res.data.length === 1){
-        //             if(user.username === "admin"){
-        //                 history.push('/exercise');
-        //             }
-        //             else{
-        //                 this.props.setUser(user.username);
-        //                 history.push('/exer_list_user');
-        //             }
-        //         }
-        //         else{
-        //             alert("Incorrect username or password");
-        //         }
-        //     })
-        //     .catch(function(error){
-        //         alert("Something went wrong");
-        //         console.log(error);
-        //     });
+        axios.post("http://localhost:5000/users/login",user)
+            .then(res => {
+                console.log(res.data[0].username);
+                if(res.data.length === 1){
+                    if(user.username === "admin"){
+                        history.push('/exercise');
+                    }
+                    else{
+                        this.props.setUser(user.username);
+                        history.push('/exer_list_user');
+                    }
+                }
+                else{
+                    alert("Incorrect username or password");
+                }
+            })
+            .catch(function(error){
+                alert("Something went wrong");
+                console.log(error);
+            });
         this.setState({
             email: "",
             password: "",
