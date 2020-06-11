@@ -95,20 +95,20 @@ class Login extends Component{
             
             <div className="login-body" translate="no">
                 <div className="cont s--signup">
-                    <div className="form sign-in">
+                    <form className="form sign-in" onSubmit={this.onSubmit}>
                         <h2>Welcome back,</h2>
                         <label>
                             <span>Email</span>
-                            <input type="email" />
+                            <input type="email" required value={this.state.username} onChange={this.onChangeUserName}/>
                         </label>
                         <label>
                             <span>Password</span>
-                            <input type="password" />
+                            <input type="password" required value={this.state.password} onChange={this.onChangePassword}/>
                         </label>
                         <p className="forgot-pass">Forgot password?</p>
                         <button type="button" className="submit">Sign In</button>
                         <button type="button" className="fb-btn">Connect with <span>facebook</span></button>
-                    </div>
+                    </form>
                     <div className="sub-cont">
                         <div className="img">
                             <div className="img__text m--up">
