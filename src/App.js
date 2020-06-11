@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Router, Route } from "react-router-dom";
+import history from './history';
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import Login from './components/login/login.component';
+// import Register from './components/register.component';
+import { loginReducer } from './reducer/login-reducer';
+import { Provider } from 'react-redux'; 
+import { createStore, combineReducers } from 'redux';
+
+const reducers = combineReducers({
+  login: loginReducer
+});
+
+const store = createStore(reducers);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Provider store = {store}>
+      <Router history={history}>
+        <div className="container">
+          <Route path="/" exact component={Login} />
+          {/* <Route path="/register" exact component={Register} /> */}
+
+          {/* <Route path="/exercise" component={ExercisesList} />
+          <Route path="/edit/:id" component={EditExercise} /> */}
+        </div>
+      </Router>
+    </Provider>
+  )
 }
 
 export default App;
