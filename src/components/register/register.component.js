@@ -10,14 +10,16 @@ export default class Register extends Component{
         super(props);
 
         this.onChangeUserName = this.onChangeUserName.bind(this);
+        this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeCnfPassword = this.onChangeCnfPassword.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            username: "",
+            name: "",
             password: "",
-            cnf_password: ""
+            cnf_password: "",
+            email: ""
         }
     }
     componentDidMount(){
@@ -39,9 +41,14 @@ export default class Register extends Component{
     }
     onChangeUserName(e){
         this.setState({
-            username: e.target.value
+            name: e.target.value
         })
-    } 
+    }
+    onChangeEmail(e){
+        this.setState({
+            email: e.target.value
+        })
+    }  
     onChangePassword(e){
         this.setState({
             password: e.target.value
@@ -55,17 +62,18 @@ export default class Register extends Component{
     onSubmit(e){
         e.preventDefault();
         const user = {
-            username: this.state.username,
+            name: this.state.name,
+            email: this.state.email,
             password: this.state.password,
             cnf_password: this.state.cnf_password
         }
-        // console.log(user);
+        console.log(user);
 
         if(user.cnf_password !== user.password){
             alert("Password and Confirm password fields should be same");
             return;
         }
-
+        user.password = sha256(this.state.password);
         axios.post("http://localhost:5000/users/register",user)
             .then(res => {
                 if(res.data ==="Success"){
@@ -80,7 +88,8 @@ export default class Register extends Component{
                 console.log(error);
             });
         this.setState({
-            username: "",
+            name: "",
+            email: "",
             password: "",
             cnf_password: ""
         })
@@ -104,7 +113,7 @@ export default class Register extends Component{
                                 </div>
                                 <div className="div">
                                         <h5>Name</h5>
-                                        <input type="text" className="input" required value={this.state.name} onChange={this.onChangeName}/>
+                                        <input type="text" className="input" required value={this.state.name} onChange={this.onChangeUserName}/>
                                 </div>
                             </div>
                             <div className="input-div">
