@@ -13,11 +13,13 @@ class Login extends Component{
 
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
+        this.onChangeRemember = this.onChangeRemember.bind(this);
         this.onSubmitLogin = this.onSubmitLogin.bind(this);
 
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            remember: false
         }
     }
     componentDidMount(){
@@ -47,13 +49,18 @@ class Login extends Component{
             password: e.target.value
         })
     }
+    onChangeRemember(e){
+        this.setState({
+            remember: e.target.checked
+        })
+    }
     onSubmitLogin(e){
         e.preventDefault();
         const user = {
             email: this.state.email,
             password: sha256(this.state.password)
         }
-        console.log(user);
+        console.log(user, this.state.remember);
 
         axios.post("http://localhost:5000/users/login",user)
             .then(res => {
@@ -64,7 +71,7 @@ class Login extends Component{
                     }
                     else{
                         this.props.setUser(user.username);
-                        history.push('/exer_list_user');
+                        history.push('/home');
                     }
                 }
                 else{
@@ -77,7 +84,8 @@ class Login extends Component{
             });
         this.setState({
             email: "",
-            password: ""
+            password: "",
+            remember: false
         })
     }
 
@@ -112,7 +120,7 @@ class Login extends Component{
                                 </div>
                             </div>
                             <div className="remember">
-                                <input type="checkbox"  value={this.state.email} onChange={this.onChangeEmail}/>
+                                <input type="checkbox" checked={this.state.remember} onChange={this.onChangeRemember}/>
                                 &nbsp;<label> Remember me</label>
                             </div>
                             <div className="row">
