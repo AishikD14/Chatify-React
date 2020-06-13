@@ -13,15 +13,11 @@ class Login extends Component{
 
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        this.onChangeUserName = this.onChangeUserName.bind(this);
         this.onSubmitLogin = this.onSubmitLogin.bind(this);
-        this.onSubmitRegister = this.onSubmitRegister.bind(this);
-        this.clearVal = this.clearVal.bind(this);
 
         this.state = {
             email: "",
-            password: "",
-            name: ""
+            password: ""
         }
     }
     componentDidMount(){
@@ -49,18 +45,6 @@ class Login extends Component{
     onChangePassword(e){
         this.setState({
             password: e.target.value
-        })
-    } 
-    onChangeUserName(e){
-        this.setState({
-            name: e.target.value
-        })
-    }
-    clearVal(e){
-        this.setState({
-            email: "",
-            password: "",
-            name: ""
         })
     }
     onSubmitLogin(e){
@@ -94,41 +78,6 @@ class Login extends Component{
         this.setState({
             email: "",
             password: ""
-        })
-    }
-    onSubmitRegister(e){
-        e.preventDefault();
-        const user = {
-            email: this.state.email,
-            password: sha256(this.state.password),
-            name: this.state.name
-        }
-        console.log(user);
-
-        axios.post("http://localhost:5000/users/login",user)
-            .then(res => {
-                console.log(res.data[0].username);
-                if(res.data.length === 1){
-                    if(user.username === "admin"){
-                        history.push('/exercise');
-                    }
-                    else{
-                        this.props.setUser(user.username);
-                        history.push('/exer_list_user');
-                    }
-                }
-                else{
-                    alert("Incorrect username or password");
-                }
-            })
-            .catch(function(error){
-                alert("Something went wrong");
-                console.log(error);
-            });
-        this.setState({
-            email: "",
-            password: "",
-            name: ""
         })
     }
 
