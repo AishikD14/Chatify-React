@@ -1,27 +1,23 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import history from '../../history';
-import { connect } from 'react-redux';
 import { sha256 } from 'js-sha256';
-import { stateToProps, DispatchToProps } from '../../reducerfunctions';
-import './login.scss';
+import './register.scss';
 
-class Login extends Component{
+export default class Register extends Component{
     constructor(props){
         super(props);
 
-        this.onChangeEmail = this.onChangeEmail.bind(this);
-        this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeUserName = this.onChangeUserName.bind(this);
-        this.onSubmitLogin = this.onSubmitLogin.bind(this);
-        this.onSubmitRegister = this.onSubmitRegister.bind(this);
-        this.clearVal = this.clearVal.bind(this);
+        this.onChangePassword = this.onChangePassword.bind(this);
+        this.onChangeCnfPassword = this.onChangeCnfPassword.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            email: "",
+            username: "",
             password: "",
-            name: ""
+            cnf_password: ""
         }
     }
     componentDidMount(){
@@ -41,50 +37,42 @@ class Login extends Component{
             input.addEventListener("blur", remcl);
         });
     }
-    onChangeEmail(e){
+    onChangeUserName(e){
         this.setState({
-            email: e.target.value
+            username: e.target.value
         })
     } 
     onChangePassword(e){
         this.setState({
             password: e.target.value
         })
-    } 
-    onChangeUserName(e){
+    }
+    onChangeCnfPassword(e){
         this.setState({
-            name: e.target.value
+            cnf_password: e.target.value
         })
     }
-    clearVal(e){
-        this.setState({
-            email: "",
-            password: "",
-            name: ""
-        })
-    }
-    onSubmitLogin(e){
+    onSubmit(e){
         e.preventDefault();
         const user = {
-            email: this.state.email,
-            password: sha256(this.state.password)
+            username: this.state.username,
+            password: this.state.password,
+            cnf_password: this.state.cnf_password
         }
-        console.log(user);
+        // console.log(user);
 
-        axios.post("http://localhost:5000/users/login",user)
+        if(user.cnf_password !== user.password){
+            alert("Password and Confirm password fields should be same");
+            return;
+        }
+
+        axios.post("http://localhost:5000/users/register",user)
             .then(res => {
-                console.log(res.data[0].username);
-                if(res.data.length === 1){
-                    if(user.username === "admin"){
-                        history.push('/exercise');
-                    }
-                    else{
-                        this.props.setUser(user.username);
-                        history.push('/exer_list_user');
-                    }
+                if(res.data ==="Success"){
+                    history.push('/');
                 }
                 else{
-                    alert("Incorrect username or password");
+                    alert("Username already exists");
                 }
             })
             .catch(function(error){
@@ -92,48 +80,38 @@ class Login extends Component{
                 console.log(error);
             });
         this.setState({
-            email: "",
-            password: ""
-        })
-    }
-    onSubmitRegister(e){
-        e.preventDefault();
-        const user = {
-            email: this.state.email,
-            password: sha256(this.state.password),
-            name: this.state.name
-        }
-        console.log(user);
-
-        axios.post("http://localhost:5000/users/login",user)
-            .then(res => {
-                console.log(res.data[0].username);
-                if(res.data.length === 1){
-                    if(user.username === "admin"){
-                        history.push('/exercise');
-                    }
-                    else{
-                        this.props.setUser(user.username);
-                        history.push('/exer_list_user');
-                    }
-                }
-                else{
-                    alert("Incorrect username or password");
-                }
-            })
-            .catch(function(error){
-                alert("Something went wrong");
-                console.log(error);
-            });
-        this.setState({
-            email: "",
+            username: "",
             password: "",
-            name: ""
+            cnf_password: ""
         })
     }
 
     render(){
         return(
+            // <div className="text-center">
+            //     <h1 style={{marginTop:15+'px'}}>Welcome to your Personal Exercise Tracker</h1>
+            //     <br />
+            //     <br />
+            //     <h4>Enter your details below to register</h4>
+            //     <form onSubmit={this.onSubmit}>
+            //         <div className="form-group">
+            //             <label>Username</label>
+            //             <input type="text" required className="form-control" value={this.state.username} onChange={this.onChangeUserName} />
+            //         </div>
+            //         <div className="form-group">
+            //             <label>Password</label>
+            //             <input type="password" required className="form-control" value={this.state.password} onChange={this.onChangePassword} />
+            //         </div>
+            //         <div className="form-group">
+            //             <label>Confirm Password</label>
+            //             <input type="password" required className="form-control" value={this.state.cnf_password} onChange={this.onChangeCnfPassword} />
+            //         </div>
+            //         <div className="form-group">
+            //             <input type="submit" value="Register" className="btn btn-primary" />
+            //         </div>
+            //     </form>
+            // </div>
+        
             <div className="login-body">
                 <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
                 <div className="container">
@@ -163,14 +141,11 @@ class Login extends Component{
                                 </div>
                             </div>
                             <Link to={"/register"}>Forgot Password?</Link>
-                            <input type="submit" className="btn" value="Login" />
+                            <input type="submit" className="btn" value="Register" />
                         </form>
                     </div>
                 </div>
             </div>
-                    
         );
     }
 }
-
-export default connect(stateToProps, DispatchToProps)(Login);
