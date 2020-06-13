@@ -111,9 +111,13 @@ class Login extends Component{
                                         <input type="password" className="input" required value={this.state.password} onChange={this.onChangePassword}/>
                                 </div>
                             </div>
+                            <div className="remember">
+                                <input type="checkbox"  value={this.state.email} onChange={this.onChangeEmail}/>
+                                &nbsp;<label> Remember me</label>
+                            </div>
                             <div className="row">
                                 <div className="col-xs-12 col-sm-6">
-                                    <Link to={"/register"} className="register-link">Click to Register</Link>
+                                    <Link to={"/register"} className="register-link">New User? Click here</Link>
                                 </div>
                                 <div className="col-xs-12 col-sm-6" >
                                     <Link to={"/register"} className="forgot-link">Forgot Password?</Link>
