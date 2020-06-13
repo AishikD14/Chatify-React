@@ -111,7 +111,14 @@ class Login extends Component{
                                         <input type="password" className="input" required value={this.state.password} onChange={this.onChangePassword}/>
                                 </div>
                             </div>
-                            <Link to={"/register"}>Forgot Password?</Link>
+                            <div className="row">
+                                <div className="col-xs-12 col-sm-6">
+                                    <Link to={"/register"} className="register-link">Click to Register</Link>
+                                </div>
+                                <div className="col-xs-12 col-sm-6" >
+                                    <Link to={"/register"} className="forgot-link">Forgot Password?</Link>
+                                </div>
+                            </div>
                             <input type="submit" className="btn" value="Login" />
                         </form>
                     </div>
