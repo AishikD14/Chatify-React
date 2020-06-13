@@ -87,7 +87,7 @@ class Login extends Component{
                 <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
                 <div className="container">
                     <div className="img">
-                        <img src={require("../../assets/bg.svg")} alt="background"/>
+                        <img src={require("../../assets/login.svg")} alt="background"/>
                     </div>
                     <div className="login-content">
                         <form onSubmit={this.onSubmitLogin}>
