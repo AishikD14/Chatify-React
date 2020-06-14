@@ -129,11 +129,6 @@ export default class Register extends Component{
             }
             console.log(user);
 
-            // this.setState({
-            //     otpSet: true,
-            //     otpButton: "Submit OTP"
-            // });
-
             axios.post(custom.URL + "/user/request_otp", user, custom.options)
                 .then(res => {
                     if(res.status ===200){
@@ -156,9 +151,6 @@ export default class Register extends Component{
                 });
         }
         else{
-            // this.setState({
-            //     showRegister: true
-            // })
             if(sha256(this.state.otp) === this.state.otpRecieved){
                 this.setState({
                     showRegister: true
