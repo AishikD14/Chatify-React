@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import history from '../../history';
 import { sha256 } from 'js-sha256';
+import custom from '../environment';
 import './register.scss';
 
 export default class Register extends Component{
@@ -105,11 +106,8 @@ export default class Register extends Component{
         user.password = sha256(this.state.password);
         axios.post("http://localhost:5000/users/register",user)
             .then(res => {
-                if(res.data ==="Success"){
+                if(res.status ===200){
                     history.push('/');
-                }
-                else{
-                    alert("Username already exists");
                 }
             })
             .catch(function(error){
@@ -131,12 +129,12 @@ export default class Register extends Component{
             }
             console.log(user);
 
-            this.setState({
-                otpSet: true,
-                otpButton: "Submit OTP"
-            });
+            // this.setState({
+            //     otpSet: true,
+            //     otpButton: "Submit OTP"
+            // });
 
-            axios.post("http://localhost:5000/users/request_otp",user)
+            axios.post(custom.URL + "/user/request_otp", user, custom.options)
                 .then(res => {
                     if(res.status ===200){
                         this.setState({
@@ -145,6 +143,12 @@ export default class Register extends Component{
                             otpButton: "Submit OTP"
                         })
                     }
+                    else{
+                        this.setState({
+                            email: ""
+                        });
+                        alert("Username already exists");
+                    }
                 })
                 .catch(function(error){
                     alert("Something went wrong");
@@ -152,13 +156,19 @@ export default class Register extends Component{
                 });
         }
         else{
-            this.setState({
-                showRegister: true
-            })
+            // this.setState({
+            //     showRegister: true
+            // })
             if(sha256(this.state.otp) === this.state.otpRecieved){
                 this.setState({
                     showRegister: true
                 })
+            }
+            else{
+                this.setState({
+                    otp: ""
+                })
+                alert("Invalid OTP");
             }
         }
     }
@@ -193,11 +203,12 @@ export default class Register extends Component{
                                         <input type="number" className="input" required value={this.state.otp} onChange={this.onChangeOtp}/>
                                 </div>
                             </div>}
+                            <Link to={"/"} className="signin-link">Click to Sign In</Link>
                             <input type="submit" className="btn" value={this.state.otpButton} />
                         </form>}
                         {this.state.showRegister && <form onSubmit={this.onSubmit}>
                             <img src={require("../../assets/avatar.svg")} alt="avatar"/>
-                            <h2 className="title">Welcome</h2>
+                            <h2 className="title">Almost There</h2>
                             <div className="input-div one">
                                 <div className="i">
                                         <i className="fas fa-user"></i>
