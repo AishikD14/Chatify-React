@@ -13,16 +13,40 @@ export default class Register extends Component{
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeCnfPassword = this.onChangeCnfPassword.bind(this);
+        this.onChangeOtp = this.onChangeOtp.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmitOtp = this.onSubmitOtp.bind(this);
 
         this.state = {
             name: "",
             password: "",
             cnf_password: "",
-            email: ""
+            email: "",
+            otp: "",
+            otpButton: "Get OTP",
+            otpSet: false,
+            otpRecieved: '',
+            showRegister: false
         }
     }
     componentDidMount(){
+        const inputs = document.querySelectorAll(".input");
+        function addcl(){
+            let parent = this.parentNode.parentNode;
+            parent.classList.add("focus");
+        }
+        function remcl(){
+            let parent = this.parentNode.parentNode;
+            if(this.value === ""){
+                parent.classList.remove("focus");
+            }
+        }
+        inputs.forEach(input => {
+            input.addEventListener("focus", addcl);
+            input.addEventListener("blur", remcl);
+        });
+    }
+    componentDidUpdate(){
         const inputs = document.querySelectorAll(".input");
         function addcl(){
             let parent = this.parentNode.parentNode;
@@ -57,6 +81,11 @@ export default class Register extends Component{
     onChangeCnfPassword(e){
         this.setState({
             cnf_password: e.target.value
+        })
+    }
+    onChangeOtp(e){
+        this.setState({
+            otp: e.target.value
         })
     }
     onSubmit(e){
@@ -94,6 +123,45 @@ export default class Register extends Component{
             cnf_password: ""
         })
     }
+    onSubmitOtp(e){
+        e.preventDefault();
+        if(!this.state.otpSet){
+            const user = {
+                email: this.state.email
+            }
+            console.log(user);
+
+            this.setState({
+                otpSet: true,
+                otpButton: "Submit OTP"
+            });
+
+            axios.post("http://localhost:5000/users/request_otp",user)
+                .then(res => {
+                    if(res.status ===200){
+                        this.setState({
+                            otpSet: true,
+                            otpRecieved: res.data.otp,
+                            otpButton: "Submit OTP"
+                        })
+                    }
+                })
+                .catch(function(error){
+                    alert("Something went wrong");
+                    console.log(error);
+                });
+        }
+        else{
+            this.setState({
+                showRegister: true
+            })
+            if(sha256(this.state.otp) === this.state.otpRecieved){
+                this.setState({
+                    showRegister: true
+                })
+            }
+        }
+    }
 
     render(){
         return(
@@ -104,7 +172,30 @@ export default class Register extends Component{
                         <img src={require("../../assets/login.svg")} alt="background"/>
                     </div>
                     <div className="login-content">
-                        <form onSubmit={this.onSubmit}>
+                        {!this.state.showRegister && <form onSubmit={this.onSubmitOtp}>
+                            <img src={require("../../assets/avatar.svg")} alt="avatar"/>
+                            <h2 className="title">Get Started</h2>
+                            <div className="input-div">
+                                <div className="i">
+                                        <i className="fas fa-envelope"></i>
+                                </div>
+                                <div className="div">
+                                        <h5>Email</h5>
+                                        <input type="email" className="input" required value={this.state.email} onChange={this.onChangeEmail}/>
+                                </div>
+                            </div>
+                            {this.state.otpSet && <div className="input-div">
+                                <div className="i">
+                                        <i className="fas fa-key"></i>
+                                </div>
+                                <div className="div">
+                                        <h5>OTP</h5>
+                                        <input type="number" className="input" required value={this.state.otp} onChange={this.onChangeOtp}/>
+                                </div>
+                            </div>}
+                            <input type="submit" className="btn" value={this.state.otpButton} />
+                        </form>}
+                        {this.state.showRegister && <form onSubmit={this.onSubmit}>
                             <img src={require("../../assets/avatar.svg")} alt="avatar"/>
                             <h2 className="title">Welcome</h2>
                             <div className="input-div one">
@@ -114,15 +205,6 @@ export default class Register extends Component{
                                 <div className="div">
                                         <h5>Name</h5>
                                         <input type="text" className="input" required value={this.state.name} onChange={this.onChangeUserName}/>
-                                </div>
-                            </div>
-                            <div className="input-div">
-                                <div className="i">
-                                        <i className="fas fa-user"></i>
-                                </div>
-                                <div className="div">
-                                        <h5>Email</h5>
-                                        <input type="email" className="input" required value={this.state.email} onChange={this.onChangeEmail}/>
                                 </div>
                             </div>
                             <div className="input-div">
@@ -145,7 +227,7 @@ export default class Register extends Component{
                             </div>
                             <Link to={"/"} className="signin-link">Click to Sign In</Link>
                             <input type="submit" className="btn" value="Register" />
-                        </form>
+                        </form>}
                     </div>
                 </div>
             </div>

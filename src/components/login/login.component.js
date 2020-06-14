@@ -67,10 +67,13 @@ class Login extends Component{
                 console.log(res.data[0].username);
                 if(res.data.length === 1){
                     if(user.username === "admin"){
-                        history.push('/exercise');
+                        history.push('/admin');
                     }
                     else{
                         this.props.setUser(user.username);
+                        if(this.state.remember){
+                            localStorage.setItem('sessionToken',user.username);
+                        }
                         history.push('/home');
                     }
                 }
