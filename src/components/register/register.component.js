@@ -17,6 +17,7 @@ export default class Register extends Component{
         this.onChangeOtp = this.onChangeOtp.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onSubmitOtp = this.onSubmitOtp.bind(this);
+        this.resendOTP = this.resendOTP.bind(this);
 
         this.state = {
             name: "",
@@ -121,6 +122,36 @@ export default class Register extends Component{
             cnf_password: ""
         })
     }
+    resendOTP(e){
+        this.setState({
+            otpSet: false
+        })
+        const user = {
+            email: this.state.email
+        }
+        console.log(user);
+
+        axios.post(custom.URL + "/user/request_otp", user, custom.options)
+            .then(res => {
+                if(res.status ===200){
+                    this.setState({
+                        otpSet: true,
+                        otpRecieved: res.data.otp,
+                        otpButton: "Submit OTP"
+                    })
+                }
+                else{
+                    this.setState({
+                        email: ""
+                    });
+                    alert("Username already exists");
+                }
+            })
+            .catch(function(error){
+                alert("Something went wrong");
+                console.log(error);
+            });
+    }
     onSubmitOtp(e){
         e.preventDefault();
         if(!this.state.otpSet){
@@ -195,7 +226,7 @@ export default class Register extends Component{
                                         <input type="number" className="input" required value={this.state.otp} onChange={this.onChangeOtp}/>
                                 </div>
                             </div>}
-                            <Link to={"/"} className="signin-link">Click to Sign In</Link>
+                            {this.state.otpSet && <Link  className="signin-link" onClick={this.resendOTP}>Resend OTP</Link>}
                             <input type="submit" className="btn" value={this.state.otpButton} />
                         </form>}
                         {this.state.showRegister && <form onSubmit={this.onSubmit}>
