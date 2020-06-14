@@ -1,17 +1,17 @@
 export const stateToProps = (state) => {
     return {
-        userId: state.login.username
+        userToken: state.login.userToken
     }  
 }
 
 export const DispatchToProps = (dispatch) => {
-  return {
-      setUser:(user) => {
-          console.log(user);
-          dispatch({
-              type: "LoginModule",
-              username: user
-          })
-      }
-  }
+    return {
+        setUser:(user) => {
+            console.log(user);
+            dispatch({
+                type: "LoginModule",
+                userToken: user
+            })
+        }
+    }
 }

@@ -1,5 +1,5 @@
 const initialState = {
-    username: ""
+    userToken: ""
 };
 
 export const loginReducer = (state = initialState, action) => {
@@ -7,7 +7,7 @@ export const loginReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LoginModule":
             return {
-                username: action.username
+                userToken: action.userToken
             }
         default:
             return {

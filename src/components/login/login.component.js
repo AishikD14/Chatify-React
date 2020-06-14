@@ -5,6 +5,7 @@ import history from '../../history';
 import { connect } from 'react-redux';
 import { sha256 } from 'js-sha256';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
+import custom from '../environment';
 import './login.scss';
 
 class Login extends Component{
@@ -62,17 +63,17 @@ class Login extends Component{
         }
         console.log(user, this.state.remember);
 
-        axios.post("http://localhost:5000/users/login",user)
+        axios.post(custom.URL + "/user/login",user, custom.options)
             .then(res => {
-                console.log(res.data[0].username);
-                if(res.data.length === 1){
-                    if(user.username === "admin"){
+                console.log(res.data.token);
+                if(res.status === 200){
+                    if(user.email === "admin@admin"){
                         history.push('/admin');
                     }
                     else{
-                        this.props.setUser(user.username);
+                        this.props.setUser(res.data.token);
                         if(this.state.remember){
-                            localStorage.setItem('sessionToken',user.username);
+                            localStorage.setItem('sessionToken',res.data.token);
                         }
                         history.push('/home');
                     }

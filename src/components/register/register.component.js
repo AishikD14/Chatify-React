@@ -104,7 +104,7 @@ export default class Register extends Component{
             return;
         }
         user.password = sha256(this.state.password);
-        axios.post("http://localhost:5000/users/register",user)
+        axios.post(custom.URL + "/user/register",user, custom.options)
             .then(res => {
                 if(res.status ===200){
                     history.push('/');
