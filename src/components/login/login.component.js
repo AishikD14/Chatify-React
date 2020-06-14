@@ -131,8 +131,8 @@ class Login extends Component{
                                 <div className="col-xs-12 col-sm-6">
                                     <Link to={"/register"} className="register-link">New User? Click here</Link>
                                 </div>
-                                <div className="col-xs-12 col-sm-6" >
-                                    <Link to={"/register"} className="forgot-link">Forgot Password?</Link>
+                                <div className="col-xs-12 col-sm-6">
+                                    <p className="forgot-link">Forgot Password?</p>
                                 </div>
                             </div>
                             <input type="submit" className="btn" value="Login" />

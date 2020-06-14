@@ -159,7 +159,9 @@ export default class Register extends Component{
                 email: this.state.email
             }
             console.log(user);
-
+            this.setState({
+                otpSet: true
+            })
             axios.post(custom.URL + "/user/request_otp", user, custom.options)
                 .then(res => {
                     if(res.status ===200){
@@ -226,7 +228,7 @@ export default class Register extends Component{
                                         <input type="number" className="input" required value={this.state.otp} onChange={this.onChangeOtp}/>
                                 </div>
                             </div>}
-                            {this.state.otpSet && <Link  className="signin-link" onClick={this.resendOTP}>Resend OTP</Link>}
+                            {this.state.otpSet && <p className="resend-link" onClick={this.resendOTP}>Resend OTP</p>}
                             <input type="submit" className="btn" value={this.state.otpButton} />
                         </form>}
                         {this.state.showRegister && <form onSubmit={this.onSubmit}>

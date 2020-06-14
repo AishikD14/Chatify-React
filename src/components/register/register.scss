@@ -10,6 +10,16 @@ body{
 }
 
 .register-body{
+	.resend-link{
+		display: block;
+		text-align: right;
+		text-decoration: none;
+		color: #999;
+		font-size: 0.9rem;
+		transition: .3s;
+		cursor: pointer;
+	}
+
 	.wave{
 		position: fixed;
 		bottom: 0;
@@ -226,7 +236,7 @@ body{
 
 		.login-content{
 			justify-content: center;
-			.signin-link{
+			.signin-link, .resend-link{
 				text-align: center;
 				margin-top: 1rem;
 			}

@@ -9,7 +9,7 @@ body{
     overflow: hidden;
 }
 
-.login-body{
+.forgot-body{
 	.wave{
 		position: fixed;
 		bottom: 0;
@@ -209,7 +209,7 @@ body{
 }
 
 @media screen and (max-width: 1050px){
-	.login-body{
+	.forgot-body{
 		.container{
 			grid-gap: 5rem;
 		}
@@ -217,7 +217,7 @@ body{
 }
 
 @media screen and (max-width: 1000px){
-	.login-body{
+	.forgot-body{
 		form{
 			width: 290px;
 		}
@@ -234,7 +234,7 @@ body{
 }
 
 @media screen and (max-width: 900px){
-	.login-body{
+	.forgot-body{
 		.container{
 			grid-template-columns: 1fr;
 			padding: 0;
