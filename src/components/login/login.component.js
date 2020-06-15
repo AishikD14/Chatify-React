@@ -107,7 +107,7 @@ class Login extends Component{
                             <h2 className="title">Welcome</h2>
                             <div className="input-div one">
                                 <div className="i">
-                                        <i className="fas fa-user"></i>
+                                        <i className="fas fa-envelope"></i>
                                 </div>
                                 <div className="div">
                                         <h5>Email</h5>
@@ -132,7 +132,7 @@ class Login extends Component{
                                     <Link to={"/register"} className="register-link">New User? Click here</Link>
                                 </div>
                                 <div className="col-xs-12 col-sm-6">
-                                    <p className="forgot-link">Forgot Password?</p>
+                                    <Link to={"/forgot_pass"} className="forgot-link">Forgot Password?</Link>
                                 </div>
                             </div>
                             <input type="submit" className="btn" value="Login" />

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import history from '../../history';
 import { Link } from 'react-router-dom';
-import { sha256 } from 'js-sha256';
 import custom from '../environment';
 import './forgotPass.scss';
 
@@ -10,15 +9,11 @@ class ForgotPass extends Component{
     constructor(props){
         super(props);
 
-        this.onChangeCnfPassword = this.onChangeCnfPassword.bind(this);
-        this.onChangePassword = this.onChangePassword.bind(this);
-        this.onSubmitReset = this.onSubmitReset.bind(this);
+        this.onChangeEmail = this.onChangeEmail.bind(this);
+        this.onSubmitForgot = this.onSubmitForgot.bind(this);
 
         this.state = {
-            cnf_password: "",
-            password: "",
-            token: this.props.match.params.token,
-            showPass: false
+            email: ""
         }
     }
     componentDidMount(){
@@ -37,63 +32,38 @@ class ForgotPass extends Component{
             input.addEventListener("focus", addcl);
             input.addEventListener("blur", remcl);
         });
-        axios.get(custom.URL + "/user/check_reset_token/"+this.state.token, custom.options)
-            .then(response => {
-                if(response.status === 200){
-                    this.setState({
-                        showPass: true
-                    })
+    }
+    onChangeEmail(e){
+        this.setState({
+            email: e.target.value
+        })
+    } 
+    onSubmitForgot(e){
+        e.preventDefault();
+        const user = {
+            email: this.state.email
+        }
+        console.log(user);
+
+        axios.post(custom.URL + "/user/forgot_password",user, custom.options)
+            .then(res => {
+                console.log(res.data);
+                if(res.status === 200){
+                    alert("Password  reset link has been sent to your email");
+                    history.push('/');
+                }
+                else{
+                    alert("Email is not registered");
                 }
             })
             .catch(function(error){
                 alert("Something went wrong");
                 console.log(error);
             });
-    }
-    onChangeCnfPassword(e){
         this.setState({
-            cnf_password: e.target.value
+            email: ""
         })
-    } 
-    onChangePassword(e){
-        this.setState({
-            password: e.target.value
-        })
-    }
-    onSubmitReset(e){
-        e.preventDefault();
-
-        if(this.state.password !== this.state.cnf_password)
-        {
-            alert("Password and Confirm Password should match");
-            return
-        }
-        else{
-            const user = {
-                newPassword: this.state.password,
-                token: this.state.token
-            }
-            console.log(user);
-    
-            user.newPassword = sha256(user.newPassword);
-    
-            axios.post(custom.URL + "/user/reset_password",user, custom.options)
-                .then(res => {
-                    console.log(res.data);
-                    if(res.status === 200){
-                        alert("Password successfully reset");
-                        history.push('/');
-                    }
-                })
-                .catch(function(error){
-                    alert("Something went wrong");
-                    console.log(error);
-                });
-            this.setState({
-                password: "",
-                cnf_password: ""
-            })
-        }
+        
     }
 
     render(){
@@ -105,36 +75,21 @@ class ForgotPass extends Component{
                         <img src={require("../../assets/login.svg")} alt="background"/>
                     </div>
                     <div className="login-content">
-                        {this.state.showPass && <form onSubmit={this.onSubmitReset}>
+                        <form onSubmit={this.onSubmitForgot}>
                             <img src={require("../../assets/avatar.svg")} alt="avatar"/>
-                            <h2 className="title">Reset PASS</h2>
+                            <h2 className="title">Forgot Pass</h2>
                             <div className="input-div one">
                                 <div className="i">
-                                        <i className="fas fa-lock"></i>
+                                        <i className="fas fa-envelope"></i>
                                 </div>
                                 <div className="div">
-                                        <h5>Password</h5>
-                                        <input type="password" className="input" required value={this.state.password} onChange={this.onChangePassword}/>
+                                        <h5>Email</h5>
+                                        <input type="email" className="input" required value={this.state.email} onChange={this.onChangeEmail}/>
                                 </div>
                             </div>
-                            <div className="input-div pass">
-                                <div className="i"> 
-                                        <i className="fas fa-lock"></i>
-                                </div>
-                                <div className="div">
-                                        <h5>Confirm Password</h5>
-                                        <input type="password" className="input" required value={this.state.cnf_password} onChange={this.onChangeCnfPassword}/>
-                                </div>
-                            </div>
-                            <input type="submit" className="btn" value="Reset Password" />
-                        </form>}
-                        {!this.state.showPass && <form>
-                            <img src={require("../../assets/avatar.svg")} alt="avatar"/>
-                            <h2 className="title">Oops! The link has expired</h2>
-                            <Link to={"/"}>
-                                <input type="submit" className="btn" value="Click to Sign In" />
-                            </Link>
-                        </form>}
+                            <Link to={"/"} className="signin-link">Ready to Sign In</Link>
+                            <input type="submit" className="btn" value="Get Reset Link" />
+                        </form>
                     </div>
                 </div>
             </div>

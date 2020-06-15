@@ -5,7 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Login from './components/login/login.component';
 import Register from './components/register/register.component';
-import ForgotPass from './components/forgotPass/forgotPass.component'
+import ForgotPass from './components/forgotPass/forgotPass.component';
+import SetPass from './components/setPass/setPass.component'
 import { loginReducer } from './reducer/login-reducer';
 import { Provider } from 'react-redux'; 
 import { createStore, combineReducers } from 'redux';
@@ -24,8 +25,8 @@ function App() {
           <Route path="/" exact component={Login} />
           <Route path="/register" component={Register} />
 
-          <Route path="/forgot_pass/:token" component={ForgotPass} />
-          {/* <Route path="/edit/:id" component={EditExercise} /> */}
+          <Route path="/forgot_pass" component={ForgotPass} />
+          <Route path="/set_pass/:token" component={SetPass} />
         </div>
       </Router>
     </Provider>

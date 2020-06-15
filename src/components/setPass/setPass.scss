@@ -9,8 +9,20 @@ body{
     overflow: hidden;
 }
 
-.forgot-body{
-	.resend-link{
+.set-pass-body{
+	.wave{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		height: 100%;
+		z-index: -1;
+	}
+
+	.register-link{
+		text-align: left;
+	}
+
+	.forgot-link{
 		display: block;
 		text-align: right;
 		text-decoration: none;
@@ -20,12 +32,8 @@ body{
 		cursor: pointer;
 	}
 
-	.wave{
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		height: 100%;
-		z-index: -1;
+	.forgot-link:hover{
+		color: #38d39f;
 	}
 
 	.container{
@@ -92,6 +100,12 @@ body{
 
 	.i i{
 		transition: .3s;
+	}
+
+	.remember{
+		text-align: left;
+		margin-top: 1rem;
+		color: #999;
 	}
 
 	.input-div > div{
@@ -195,7 +209,7 @@ body{
 }
 
 @media screen and (max-width: 1050px){
-	.forgot-body{
+	.set-pass-body{
 		.container{
 			grid-gap: 5rem;
 		}
@@ -203,7 +217,7 @@ body{
 }
 
 @media screen and (max-width: 1000px){
-	.forgot-body{
+	.set-pass-body{
 		form{
 			width: 290px;
 		}
@@ -220,7 +234,7 @@ body{
 }
 
 @media screen and (max-width: 900px){
-	.forgot-body{
+	.set-pass-body{
 		.container{
 			grid-template-columns: 1fr;
 			padding: 0;
@@ -236,7 +250,7 @@ body{
 
 		.login-content{
 			justify-content: center;
-			.signin-link, .resend-link{
+			.register-link, .forgot-link{
 				text-align: center;
 				margin-top: 1rem;
 			}
