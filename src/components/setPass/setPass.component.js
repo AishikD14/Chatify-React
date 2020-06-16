@@ -18,7 +18,8 @@ class SetPass extends Component{
             cnf_password: "",
             password: "",
             token: this.props.match.params.token,
-            showPass: false
+            showPass: false,
+            modalShow: true
         }
     }
     componentDidMount(){
@@ -41,7 +42,8 @@ class SetPass extends Component{
             .then(response => {
                 if(response.status === 200 || response.status === 304 ){
                     this.setState({
-                        showPass: true
+                        showPass: true,
+                        modalShow: false
                     })
                 }
             })
@@ -76,11 +78,17 @@ class SetPass extends Component{
             console.log(user);
     
             user.newPassword = sha256(user.newPassword);
+            this.setState({
+                modalShow: true
+            })
     
             axios.post(custom.URL + "/user/reset_password",user, custom.options)
                 .then(res => {
                     console.log(res.data);
                     if(res.status === 200){
+                        this.setState({
+                            modalShow: false
+                        })
                         alert("Password successfully reset");
                         history.push('/');
                     }
@@ -98,7 +106,11 @@ class SetPass extends Component{
 
     render(){
         return(
-            <div className="set-pass-body">
+            <div>
+                {this.state.modalShow && <div className="spinner-body">
+                    <div className="spinner-border text-success" role="status"></div>
+                </div>}
+                <div className="set-pass-body">
                 <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
                 <div className="container">
                     <div className="img">
@@ -138,7 +150,7 @@ class SetPass extends Component{
                     </div>
                 </div>
             </div>
-                    
+            </div>     
         );
     }
 }

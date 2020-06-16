@@ -13,7 +13,8 @@ class ForgotPass extends Component{
         this.onSubmitForgot = this.onSubmitForgot.bind(this);
 
         this.state = {
-            email: ""
+            email: "",
+            modalShow: false
         }
     }
     componentDidMount(){
@@ -44,10 +45,16 @@ class ForgotPass extends Component{
             email: this.state.email
         }
         console.log(user);
+        this.setState({
+            modalShow: true
+        })
 
         axios.post(custom.URL + "/user/forgot_password",user, custom.options)
             .then(res => {
                 console.log(res.data);
+                this.setState({
+                    modalShow: false
+                })
                 if(res.status === 200){
                     alert("Password  reset link has been sent to your email");
                     history.push('/');
@@ -68,7 +75,11 @@ class ForgotPass extends Component{
 
     render(){
         return(
-            <div className="forgot-body">
+            <div>
+                {this.state.modalShow && <div className="spinner-body">
+                    <div className="spinner-border text-success" role="status"></div>
+                </div>}
+                <div className="forgot-body">
                 <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
                 <div className="container">
                     <div className="img">
@@ -93,7 +104,7 @@ class ForgotPass extends Component{
                     </div>
                 </div>
             </div>
-                    
+            </div>
         );
     }
 }
