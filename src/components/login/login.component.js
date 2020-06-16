@@ -57,9 +57,11 @@ class Login extends Component{
     }
     onSubmitLogin(e){
         e.preventDefault();
+        const remember = this.state.remember;
         const user = {
             email: this.state.email,
-            password: sha256(this.state.password)
+            // password: sha256(this.state.password)
+            password: this.state.password
         }
         console.log(user, this.state.remember);
 
@@ -72,10 +74,25 @@ class Login extends Component{
                     }
                     else{
                         this.props.setUser(res.data.token);
-                        if(this.state.remember){
+                        console.log(this.state.remember);
+                        if(remember){
                             localStorage.setItem('sessionToken',res.data.token);
                         }
-                        history.push('/home');
+                        const session = {
+                            token: res.data.token
+                        }
+                        axios.post(custom.URL + "/user/get_session",session, custom.options)
+                            .then(res => {
+                                if(res.status === 200){
+                                    this.props.setSession(res.data);
+                                    history.push('/home');
+                                }
+                            })
+                            .catch(function(error){
+                                alert("Something went wrong");
+                                console.log(error);
+                            });
+                        // history.push('/home');
                     }
                 }
                 else{
