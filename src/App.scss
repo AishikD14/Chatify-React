@@ -1,0 +1,14 @@
+.spinner-body{
+    background-color: black;
+    background-color: rgba(1, 1, 1, 0.7);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    top: 0;
+    .spinner-border{
+        position: relative;
+        top: 47%;
+    }
+}

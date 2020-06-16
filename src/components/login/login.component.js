@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import history from '../../history';
 import { connect } from 'react-redux';
 import { sha256 } from 'js-sha256';
+// import Loader from 'react-loader-spinner';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 import custom from '../environment';
 import './login.scss';
@@ -20,7 +21,8 @@ class Login extends Component{
         this.state = {
             email: "",
             password: "",
-            remember: false
+            remember: false,
+            modalShow: false
         }
     }
     componentDidMount(){
@@ -64,7 +66,9 @@ class Login extends Component{
             password: this.state.password
         }
         console.log(user, this.state.remember);
-
+        this.setState({
+            modalShow: true
+        })
         axios.post(custom.URL + "/user/login",user, custom.options)
             .then(res => {
                 console.log(res.data.token);
@@ -85,6 +89,9 @@ class Login extends Component{
                             .then(res => {
                                 if(res.status === 200){
                                     this.props.setSession(res.data);
+                                    this.setState({
+                                        modalShow: false
+                                    })
                                     history.push('/home');
                                 }
                             })
@@ -96,6 +103,9 @@ class Login extends Component{
                     }
                 }
                 else{
+                    this.setState({
+                        modalShow: false
+                    })
                     alert("Incorrect username or password");
                 }
             })
@@ -112,7 +122,11 @@ class Login extends Component{
 
     render(){
         return(
-            <div className="login-body">
+            <div>
+                {this.state.modalShow && <div className="spinner-body">
+                    <div className="spinner-border text-success" role="status"></div>
+                </div>}
+                <div className="login-body">
                 <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
                 <div className="container">
                     <div className="img">
@@ -157,7 +171,7 @@ class Login extends Component{
                     </div>
                 </div>
             </div>
-                    
+            </div>     
         );
     }
 }

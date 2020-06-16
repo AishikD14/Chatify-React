@@ -28,7 +28,8 @@ export default class Register extends Component{
             otpButton: "Get OTP",
             otpSet: false,
             otpRecieved: '',
-            showRegister: false
+            showRegister: false,
+            modalShow: false
         }
     }
     componentDidMount(){
@@ -105,9 +106,15 @@ export default class Register extends Component{
             return;
         }
         user.password = sha256(this.state.password);
+        this.setState({
+            modalShow: true
+        })
         axios.post(custom.URL + "/user/register",user, custom.options)
             .then(res => {
                 if(res.status ===200){
+                    this.setState({
+                        modalShow: false
+                    })
                     history.push('/');
                 }
             })
@@ -124,7 +131,8 @@ export default class Register extends Component{
     }
     resendOTP(e){
         this.setState({
-            otpSet: false
+            otpSet: false,
+            modalShow: true
         })
         const user = {
             email: this.state.email
@@ -137,12 +145,14 @@ export default class Register extends Component{
                     this.setState({
                         otpSet: true,
                         otpRecieved: res.data.otp,
-                        otpButton: "Submit OTP"
+                        otpButton: "Submit OTP",
+                        modalShow: false
                     })
                 }
                 else{
                     this.setState({
-                        email: ""
+                        email: "",
+                        modalShow: false
                     });
                     alert("Username already exists");
                 }
@@ -160,7 +170,7 @@ export default class Register extends Component{
             }
             console.log(user);
             this.setState({
-                otpSet: true
+                modalShow: true
             })
             axios.post(custom.URL + "/user/request_otp", user, custom.options)
                 .then(res => {
@@ -168,12 +178,14 @@ export default class Register extends Component{
                         this.setState({
                             otpSet: true,
                             otpRecieved: res.data.otp,
-                            otpButton: "Submit OTP"
+                            otpButton: "Submit OTP",
+                            modalShow: false
                         })
                     }
                     else{
                         this.setState({
-                            email: ""
+                            email: "",
+                            modalShow: false
                         });
                         alert("Username already exists");
                     }
@@ -200,7 +212,11 @@ export default class Register extends Component{
 
     render(){
         return(
-            <div className="register-body">
+            <div>
+                {this.state.modalShow && <div className="spinner-body">
+                    <div className="spinner-border text-success" role="status"></div>
+                </div>}
+                <div className="register-body">
                 <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
                 <div className="container">
                     <div className="img">
@@ -266,6 +282,7 @@ export default class Register extends Component{
                         </form>}
                     </div>
                 </div>
+            </div>
             </div>
         );
     }

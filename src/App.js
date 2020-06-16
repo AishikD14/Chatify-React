@@ -12,6 +12,7 @@ import { loginReducer } from './reducer/login-reducer';
 import { sessionReducer } from './reducer/session-reducer';
 import { Provider } from 'react-redux'; 
 import { createStore, combineReducers } from 'redux';
+import './App.scss';
 
 const reducers = combineReducers({
   login: loginReducer,
