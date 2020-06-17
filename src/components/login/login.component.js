@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import history from '../../history';
 import { connect } from 'react-redux';
-import { sha256 } from 'js-sha256';
+// import { sha256 } from 'js-sha256';
 // import Loader from 'react-loader-spinner';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 import custom from '../environment';
