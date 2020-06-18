@@ -8,6 +8,7 @@ import Register from './components/register/register.component';
 import ForgotPass from './components/forgotPass/forgotPass.component';
 import SetPass from './components/setPass/setPass.component';
 import Home from './components/home/home.component';
+import Profile from './components/profile/profile.component';
 import { loginReducer } from './reducer/login-reducer';
 import { sessionReducer } from './reducer/session-reducer';
 import { Provider } from 'react-redux'; 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/set_pass/:token" component={SetPass} />
 
           <Route path="/home" component={Home} />
+          <Route path="/profile" component={Profile} />
         </div>
       </Router>
     </Provider>
