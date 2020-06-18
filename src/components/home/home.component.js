@@ -28,11 +28,11 @@ class Home extends Component{
     render(){
         return(
             <div className="home-body">
-                <h1>Hi</h1>   
+                <h1>Hi {this.props.userName}</h1>   
                 <img src={this.state.file} alt="upload"/>
                 <br />
                 <br />
-                <label class="custom-file-upload">
+                <label className="custom-file-upload">
                     <input type="file" onChange={this.handleChange}/>
                     Custom Upload
                 </label>
