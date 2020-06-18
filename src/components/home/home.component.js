@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 // import axios from 'axios';
 // import history from '../../history';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 // import custom from '../environment';
@@ -20,6 +20,7 @@ class Home extends Component{
         return(
             <div className="home-body">
                 <h1>Hi {this.props.userName}</h1>  
+                <Link to={"/profile"}>Profile</Link>
             </div>
         );
     }
