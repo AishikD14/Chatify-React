@@ -105,11 +105,11 @@ class Profile extends Component{
         });
         if (this.state.newpassword === this.state.confirmnewpasword) {
             let payload = {
-                "token": this.props.token,
+                "token": this.props.userToken,
                 "oldPassword": sha256(this.state.oldpassword),
                 "newPassword": sha256(this.state.newpassword)
             }
-            axios.post(custom.url + '/user/change_password', payload, custom.authentication)
+            axios.post(custom.URL + '/user/change_password', payload, custom.options)
                 .then((res) => {
                     this.setState({
                         modalShow: false
@@ -142,12 +142,12 @@ class Profile extends Component{
                 modalShow: true
             });
             let payload = {
-                "token": this.props.token,
+                "token": this.props.userToken,
                 "username": this.state.newName,
                 "mobile": this.state.phone,
                 "status": this.state.status
             }
-            axios.post(custom.url + '/user/update_details', payload, custom.authentication)
+            axios.post(custom.URL + '/user/update_details', payload, custom.options)
                 .then((res) => {
                     this.setState({
                         modalShow: false
