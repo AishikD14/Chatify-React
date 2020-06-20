@@ -37,6 +37,7 @@ class Profile extends Component{
         this.onChangeOldPassword = this.onChangeOldPassword.bind(this);
         this.onChangeNewPassword = this.onChangeNewPassword.bind(this);
         this.onChangeConfirmNewPassword = this.onChangeConfirmNewPassword.bind(this);
+        this.getUserDetails = this.getUserDetails.bind(this);
     }
 
     componentDidMount() {
@@ -48,17 +49,18 @@ class Profile extends Component{
                 this.setState({
                     token: localStorage.getItem('sessionToken')
                 });
-                this.getUserDetails();
+                this.props.setUser(localStorage.getItem('sessionToken'));
+                this.getUserDetails(localStorage.getItem('sessionToken'));
             }
         } 
         else {
-            this.getUserDetails();
+            this.getUserDetails(this.state.token);
         }
     }
 
-    getUserDetails(){
+    getUserDetails(token){
         let payload = {
-            "token": this.state.token
+            "token": token
         }
         this.setState({
             modalShow: true
@@ -77,6 +79,9 @@ class Profile extends Component{
                         profilepic: res.data["profilepic"],
                         statusold: res.data["status"]
                     });
+                }
+                else{
+                    history.push("/");
                 }
             })
             .catch((err) => {
