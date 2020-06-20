@@ -41,38 +41,50 @@ class Profile extends Component{
 
     componentDidMount() {
         if (this.state.token === '' || this.state.token === null || this.state.token === undefined) {
-            history.push("/");
+            if(localStorage.getItem("sessionToken") === '' || localStorage.getItem("sessionToken") === null || localStorage.getItem("sessionToken") === undefined){
+                history.push("/");
+            }
+            else{
+                this.setState({
+                    token: localStorage.getItem('sessionToken')
+                });
+                this.getUserDetails();
+            }
         } 
         else {
-            let payload = {
-                "token": this.state.token
-            }
-            this.setState({
-                modalShow: true
-            })
-            axios.post(custom.URL + "/user/get_user_details", payload, custom.options)
-                .then((res) => {
-                    this.setState({
-                        modalShow: false
-                    })
-                    if (res.status === 200) {
-                        this.setState({
-                            name: res.data["username"],
-                            phone: res.data["mobile"],
-                            status: res.data["status"],
-                            newName: res.data["username"],
-                            profilepic: res.data["profilepic"],
-                            statusold: res.data["status"]
-                        });
-                    }
-                })
-                .catch((err) => {
-                    this.setState({
-                        modalShow: false
-                    });
-                    console.log(err);
-                });
+            this.getUserDetails();
         }
+    }
+
+    getUserDetails(){
+        let payload = {
+            "token": this.state.token
+        }
+        this.setState({
+            modalShow: true
+        })
+        axios.post(custom.URL + "/user/get_user_details", payload, custom.options)
+            .then((res) => {
+                this.setState({
+                    modalShow: false
+                })
+                if (res.status === 200) {
+                    this.setState({
+                        name: res.data["username"],
+                        phone: res.data["mobile"],
+                        status: res.data["status"],
+                        newName: res.data["username"],
+                        profilepic: res.data["profilepic"],
+                        statusold: res.data["status"]
+                    });
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    modalShow: false
+                });
+                console.log(err);
+            });
     }
 
     logout(e) {
