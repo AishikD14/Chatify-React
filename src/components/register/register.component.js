@@ -15,6 +15,7 @@ export default class Register extends Component{
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeCnfPassword = this.onChangeCnfPassword.bind(this);
         this.onChangeOtp = this.onChangeOtp.bind(this);
+        this.onChangeMobile = this.onChangeMobile.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onSubmitOtp = this.onSubmitOtp.bind(this);
         this.resendOTP = this.resendOTP.bind(this);
@@ -29,7 +30,8 @@ export default class Register extends Component{
             otpSet: false,
             otpRecieved: '',
             showRegister: false,
-            modalShow: false
+            modalShow: false,
+            mobile: ""
         }
     }
     componentDidMount(){
@@ -91,43 +93,56 @@ export default class Register extends Component{
             otp: e.target.value
         })
     }
+    onChangeMobile(e){
+        this.setState({
+            mobile: e.target.value
+        })
+    }
     onSubmit(e){
         e.preventDefault();
         const user = {
-            name: this.state.name,
+            username: this.state.name,
             email: this.state.email,
             password: this.state.password,
-            cnf_password: this.state.cnf_password
+            pic: "",
+            mobile: this.state.mobile,
+            status: "Hey There! I am using Chatify"
         }
         console.log(user);
 
-        if(user.cnf_password !== user.password){
+        if(this.state.cnf_password !== user.password){
             alert("Password and Confirm password fields should be same");
             return;
         }
-        user.password = sha256(this.state.password);
-        this.setState({
-            modalShow: true
-        })
-        axios.post(custom.URL + "/user/register",user, custom.options)
-            .then(res => {
-                if(res.status ===200){
-                    this.setState({
-                        modalShow: false
-                    })
-                    history.push('/');
-                }
+        else if(user.mobile.length !== 10){
+            alert("Mobile number should be of 10 digits");
+            return;
+        }
+        else{
+            user.password = sha256(this.state.password);
+            this.setState({
+                modalShow: true
             })
-            .catch(function(error){
-                alert("Something went wrong");
-                console.log(error);
-            });
-        this.setState({
-            name: "",
-            email: "",
-            password: "",
-            cnf_password: ""
-        })
+            axios.post(custom.URL + "/user/register",user, custom.options)
+                .then(res => {
+                    if(res.status ===201){
+                        this.setState({
+                            modalShow: false
+                        })
+                        history.push('/');
+                    }
+                })
+                .catch(function(error){
+                    alert("Something went wrong");
+                    console.log(error);
+                });
+            this.setState({
+                name: "",
+                email: "",
+                password: "",
+                cnf_password: ""
+            })
+        }
     }
     resendOTP(e){
         this.setState({
@@ -181,13 +196,14 @@ export default class Register extends Component{
                             otpButton: "Submit OTP",
                             modalShow: false
                         })
+                        alert("Please check your email for OTP");
                     }
                     else{
                         this.setState({
                             email: "",
                             modalShow: false
                         });
-                        alert("Username already exists");
+                        alert("Email already exists");
                     }
                 })
                 .catch(function(error){
@@ -257,6 +273,15 @@ export default class Register extends Component{
                                 <div className="div">
                                         <h5>Name</h5>
                                         <input type="text" className="input" required value={this.state.name} onChange={this.onChangeUserName}/>
+                                </div>
+                            </div>
+                            <div className="input-div">
+                                <div className="i"> 
+                                        <i className="fas fa-mobile"></i>
+                                </div>
+                                <div className="div">
+                                        <h5>Mobile</h5>
+                                        <input type="number" className="input" required value={this.state.mobile} onChange={this.onChangeMobile}/>
                                 </div>
                             </div>
                             <div className="input-div">

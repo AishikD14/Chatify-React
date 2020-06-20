@@ -1,9 +1,9 @@
 const custom = {
-    URL: "https://8ec01c762074.ngrok.io",
+    URL: "https://chatify-backup.herokuapp.com",
     options: {
         auth: {
             username: 'admin',
-            password: 'chatify'
+            password: 'admin'
           }
     }
 };

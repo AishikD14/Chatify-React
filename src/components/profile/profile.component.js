@@ -1,50 +1,351 @@
 import React, {Component} from 'react';
-// import axios from 'axios';
-// import history from '../../history';
+import axios from 'axios';
+import history from '../../history';
 // import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { sha256 } from 'js-sha256';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
-// import custom from '../environment';
+import custom from '../environment';
 import './profile.scss';
 
 class Profile extends Component{
     constructor(props){
         super(props);
-
-        this.handleChange = this.handleChange.bind(this)
-
         this.state = {
-            userToken: this.props.userToken,
-            base64: "",
-            file: "data:image/png;base64,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"
+            name: this.props.userName,
+            email: '',
+            profilepic: this.props.profilePic,
+            oldpassword: '',
+            newpassword: '',
+            confirmnewpasword: '',
+            newName: '',
+            phone: '',
+            status: '',
+            file: '',
+            base64: '',
+            modalShow: false,
+            token: this.props.userToken
+        };
+        this.uploadProfilePic = this.uploadProfilePic.bind(this);
+        this.changePassword = this.changePassword.bind(this);
+        this.changeDetails = this.changeDetails.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.logout = this.logout.bind(this);
+        this.onChangeName = this.onChangeName.bind(this);
+        this.onChangePhone = this.onChangePhone.bind(this);
+        this.onChangeStatus = this.onChangeStatus.bind(this);
+        this.onChangeOldPassword = this.onChangeOldPassword.bind(this);
+        this.onChangeNewPassword = this.onChangeNewPassword.bind(this);
+        this.onChangeConfirmNewPassword = this.onChangeConfirmNewPassword.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.state.token === '' || this.state.token === null || this.state.token === undefined) {
+            history.push("/");
+        } 
+        else {
+            let payload = {
+                "token": this.state.token
+            }
+            this.setState({
+                modalShow: true
+            })
+            axios.post(custom.URL + "/user/get_user_details", payload, custom.options)
+                .then((res) => {
+                    this.setState({
+                        modalShow: false
+                    })
+                    if (res.status === 200) {
+                        this.setState({
+                            name: res.data["username"],
+                            phone: res.data["mobile"],
+                            status: res.data["status"],
+                            newName: res.data["username"],
+                            profilepic: res.data["profilepic"],
+                            statusold: res.data["status"]
+                        });
+                    }
+                })
+                .catch((err) => {
+                    this.setState({
+                        modalShow: false
+                    });
+                    console.log(err);
+                });
         }
+    }
+
+    logout(e) {
+        e.preventDefault();
+        localStorage.setItem('sessionToken', '');
+        history.push("/");
+    }
+
+    changePassword(e) {
+        e.preventDefault();
+        this.setState({
+            modalShow: true
+        });
+        if (this.state.newpassword === this.state.confirmnewpasword) {
+            let payload = {
+                "token": this.props.token,
+                "oldPassword": sha256(this.state.oldpassword),
+                "newPassword": sha256(this.state.newpassword)
+            }
+            axios.post(custom.url + '/user/change_password', payload, custom.authentication)
+                .then((res) => {
+                    this.setState({
+                        modalShow: false
+                    });
+                    if (res.status === 200) {
+                        alert("Password has been changed successfully");
+                        localStorage.setItem('sessionToken', '');
+                        history.push('/');
+                    } 
+                    else {
+                        alert("Sorry, there was some error in changing password");
+                    }
+                })
+                .catch((err) => {
+                    this.setState({
+                        modalShow: false
+                    });
+                    console.log(err);
+                })
+        }
+    }
+
+    changeDetails(e) {
+        e.preventDefault();
+        if (this.state.phone.toString().length !== 10) {
+            alert('Phone number should be of 10 digits');
+        } 
+        else {
+            this.setState({
+                modalShow: true
+            });
+            let payload = {
+                "token": this.props.token,
+                "username": this.state.newName,
+                "mobile": this.state.phone,
+                "status": this.state.status
+            }
+            axios.post(custom.url + '/user/update_details', payload, custom.authentication)
+                .then((res) => {
+                    this.setState({
+                        modalShow: false
+                    });
+                    if (res.status === 200) {
+                        alert("Details have been changed successfully");
+                        this.setState({
+                            name: this.state.newName,
+                            statusold: this.state.status
+                        })
+                    } else {
+                        alert("Sorry, there was some error in changing details");
+                    }
+                })
+                .catch((err) => {
+                    this.setState({
+                        modalShow: false
+                    });
+                    console.log(err);
+                });
+        }
+    }
+
+    onChangeName(e) {
+        this.setState({
+            newName: e.target.value
+        });
+    }
+
+    onChangePhone(e) {
+        this.setState({
+            phone: e.target.value
+        });
+    }
+
+    onChangeStatus(e) {
+        this.setState({
+            status: e.target.value
+        });
+    }
+
+    onChangeOldPassword(e) {
+        this.setState({
+            oldpassword: e.target.value
+        });
+    }
+
+    onChangeNewPassword(e) {
+        this.setState({
+            newpassword: e.target.value
+        });
+    }
+
+    onChangeConfirmNewPassword(e) {
+        this.setState({
+            confirmnewpasword: e.target.value
+        });
     }
 
     handleChange(e) {
         let file = e.target.files[0];
         let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            this.setState({
-                file: URL.createObjectURL(file),
-                base64: reader.result
-            });
-            // console.log(this.state.base64);
+        let pattern1 = /image-*/;
+        if (!file.type.match(pattern1)) {
+            alert('invalid format');
+        }
+        else {
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                this.setState({
+                    file: URL.createObjectURL(file),
+                    profilepic: reader.result
+                });
+            }
         }
     }
+
+    uploadProfilePic() {
+        this.setState({
+            modalShow: true
+        });
+        let finalJson = {
+        "pic": this.state.profilepic,
+        "token": this.state.token
+        }
+        axios.post(custom.URL + '/user/update_picture', finalJson, custom.options)
+            .then((res) => {
+            this.setState({
+                modalShow: false
+            });
+            if (res.status === 200) {
+                alert('Profile picture updated');
+            }
+            })
+            .catch((err) => {
+                console.log(err);
+                this.setState({
+                    modalShow: false
+                });
+            })
+    }
+
 
     render(){
         return(
             <div className="profile-body">
-                <h1>Hi {this.props.userName}</h1>  
-                <h2>Last login Time : {this.props.lastLoggedIn}</h2> 
-                <img src={this.state.file} alt="upload"/>
-                <br />
-                <br />
-                <label className="custom-file-upload">
-                    <input type="file" onChange={this.handleChange}/>
-                    Custom Upload
-                </label>
+                {this.state.modalShow && <div className="spinner-body">
+                    <div className="spinner-border text-success" role="status"></div>
+                </div>}
+                <div className="container">
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-3 py-2 text-center">
+                            <img className = "styled-img" src={this.state.profilepic} alt = "profilepic"/>
+                            <br />
+                            <h2>{this.state.name}</h2>
+                            <h5>{this.state.statusold}</h5>
+                            <br />
+                            <label className="custom-file-upload btn">
+                                <input type="file" onChange={this.handleChange}/>
+                                Select Profile Picture
+                            </label>
+                            <br />
+                            <br />
+                            <button className="my-2 btn btn-green-style" onClick={this.uploadProfilePic}>Upload Profile Picture</button>
+                            <br />
+                            <br />
+                            <button className="my-2 btn btn-green-style" onClick={this.logout}>Logout</button>
+                            <br />
+                        </div>
+                        <div className="col-xs-12 col-lg-9 py-2">
+                            <h2 className="text-center styled-h2">Account Settings</h2>
+                            <hr />
+                            <div className="row">
+                                <div className="col">
+                                    <p className = "styled-p"><span className="fa fa-cog"></span> Change Password</p>
+                                    <form>
+                                        <div className="row">
+                                            <div className="col-md-4 col-12 py-2">
+                                                <div className="input">
+                                                    <input type="password" name="current" id="current"
+                                                        placeholder="Enter Current Password" required value={this.state.oldpassword} onChange={this.onChangeOldPassword} className="form-control" />
+                                                </div>
+                                            </div>
+                                            <div className="col-md-4 col-12 py-2">
+                                                <div className="input">
+                                                    <input type="password" name="new" id="new" placeholder="Enter New Password" value={this.state.newpassword} onChange={this.onChangeNewPassword}
+                                                        required className="form-control" />
+                                                </div>
+                                            </div>
+                                            <div className="col-md-4 col-12 py-2">
+                                                <div className="input">
+                                                    <input type="password" name="confirm" id="confirm" value={this.state.confirmnewpasword} onChange={this.onChangeConfirmNewPassword}
+                                                        placeholder="Confirm New Password" required className="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-9 col-12 py-2">
+                                                <span className = "styledMessage">
+
+                                                </span>
+                                            </div>
+                                            <div className="col-md-3 col-12 py-2 text-right">
+                                                <button className="btn btn-green-style" onClick= {this.changePassword}>
+                                                    Change Password
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div className="row">
+                                <div className="col">
+                                    <p className = "styled-p" ><span className="fa fa-user"></span> Change Details</p>
+                                    <form>
+                                        <div className="row">
+                                            <div className="col-md-4 col-12 py-2">
+                                                <div className="input">
+                                                    <label htmlFor="phone">Update Phone Number</label>
+                                                    <input type="text" name="phone" id="phone" value = {this.state.phone} onChange = {this.onChangePhone}
+                                                        placeholder="Update Phone Number" className="form-control"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-4 col-12 py-2">
+                                                <div className="input">
+                                                    <label htmlFor="name">Update Display Name</label>
+                                                    <input type="text" name="newname" id="newname" placeholder="Update Name" value = {this.state.newName} onChange = {this.onChangeName}
+                                                        className="form-control"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-4 col-12 py-2">
+                                                <div className="input">
+                                                    <label htmlFor = "status">Update Status</label>
+                                                    <input type="text" name="status" id="status" placeholder="Update Status" value = {this.state.status} onChange = {this.onChangeStatus}
+                                                    className="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-9 col-12 py-2">
+                                                <span className = "styledMessage">
+
+                                                </span>
+                                            </div>
+                                            <div className="col-md-3 col-12 py-2 text-right">
+                                                <button className="btn btn-green-style" onClick={this.changeDetails}>Update Details</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

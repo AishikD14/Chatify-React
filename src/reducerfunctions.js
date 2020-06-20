@@ -1,23 +1,24 @@
 export const stateToProps = (state) => {
+    console.log(state.login.userToken);
     return {
         userToken: state.login.userToken,
         userName: state.session.userName,
         profilePic: state.session.profilePic,
         lastLoggedIn: state.session.lastLoggedIn
-    }  
+    } 
 }
 
 export const DispatchToProps = (dispatch) => {
     return {
         setUser:(user) => {
-            console.log(user);
+            // console.log(user);
             dispatch({
                 type: "LoginModule",
                 userToken: user
             })
         },
         setSession:(session) => {
-            console.log(session);
+            // console.log(session);
             dispatch({
                 type: "SessionModule",
                 sessionData: {

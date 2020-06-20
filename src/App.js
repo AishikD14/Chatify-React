@@ -9,6 +9,7 @@ import ForgotPass from './components/forgotPass/forgotPass.component';
 import SetPass from './components/setPass/setPass.component';
 import Home from './components/home/home.component';
 import Profile from './components/profile/profile.component';
+import Chat from './components/chat/chat.component';
 import { loginReducer } from './reducer/login-reducer';
 import { sessionReducer } from './reducer/session-reducer';
 import { Provider } from 'react-redux'; 
@@ -35,6 +36,7 @@ function App() {
 
           <Route path="/home" component={Home} />
           <Route path="/profile" component={Profile} />
+          <Route path="/chat" component={Chat} />
         </div>
       </Router>
     </Provider>

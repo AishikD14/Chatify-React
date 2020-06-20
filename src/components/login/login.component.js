@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import history from '../../history';
 import { connect } from 'react-redux';
-// import { sha256 } from 'js-sha256';
-// import Loader from 'react-loader-spinner';
+import { sha256 } from 'js-sha256';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 import custom from '../environment';
 import './login.scss';
@@ -22,7 +21,8 @@ class Login extends Component{
             email: "",
             password: "",
             remember: false,
-            modalShow: false
+            modalShow: false,
+            token: localStorage.getItem('sessionToken')
         }
     }
     componentDidMount(){
@@ -41,7 +41,38 @@ class Login extends Component{
             input.addEventListener("focus", addcl);
             input.addEventListener("blur", remcl);
         });
+        if (this.state.token!== '' || this.state.token !== null || this.state.token !== undefined) {
+            this.checkToken();
+        }
     }
+
+    checkToken() {
+        let payload = {
+          "token": this.state.token
+        };
+        this.setState({
+            modalShow: true
+        });
+        axios.post(custom.URL + '/user/get_session', payload, custom.options)
+        .then((res) => {
+            this.setState({
+                modalShow: false
+            });
+            if (res.status === 200) {
+                this.props.setSession(res.data);
+                this.props.setUser(this.state.token);
+                this.setState({
+                    modalShow: false
+                })
+                history.push('/profile');
+            }
+        })
+        .catch(function(error){
+            alert("Something went wrong");
+            console.log(error);
+        });
+      }
+
     onChangeEmail(e){
         this.setState({
             email: e.target.value
@@ -62,8 +93,7 @@ class Login extends Component{
         const remember = this.state.remember;
         const user = {
             email: this.state.email,
-            // password: sha256(this.state.password)
-            password: this.state.password
+            password: sha256(this.state.password)
         }
         console.log(user, this.state.remember);
         this.setState({
@@ -71,35 +101,21 @@ class Login extends Component{
         })
         axios.post(custom.URL + "/user/login",user, custom.options)
             .then(res => {
-                console.log(res.data.token);
+                // console.log(res.data.token);
                 if(res.status === 200){
                     if(user.email === "admin@admin"){
                         history.push('/admin');
                     }
                     else{
                         this.props.setUser(res.data.token);
-                        console.log(this.state.remember);
+                        // console.log(this.state.remember);
                         if(remember){
                             localStorage.setItem('sessionToken',res.data.token);
                         }
-                        const session = {
+                        this.setState({
                             token: res.data.token
-                        }
-                        axios.post(custom.URL + "/user/get_session",session, custom.options)
-                            .then(res => {
-                                if(res.status === 200){
-                                    this.props.setSession(res.data);
-                                    this.setState({
-                                        modalShow: false
-                                    })
-                                    history.push('/home');
-                                }
-                            })
-                            .catch(function(error){
-                                alert("Something went wrong");
-                                console.log(error);
-                            });
-                        // history.push('/home');
+                        })
+                        this.checkToken();
                     }
                 }
                 else{

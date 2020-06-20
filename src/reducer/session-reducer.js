@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const sessionReducer = (state = initialState, action) => {
-    console.log(state, action);
+    // console.log(state, action);
     switch (action.type) {
         case "SessionModule":
             return {
