@@ -26,7 +26,7 @@ class Profile extends Component{
             base64: '',
             modalShow: false,
             token: this.props.userToken,
-            picVersion: "",
+            picVersion: this.props.picVersion,
             updated: false,
             cloud: ""
         };
