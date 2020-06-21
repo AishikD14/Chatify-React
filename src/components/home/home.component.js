@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 // import history from '../../history';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {Image, CloudinaryContext} from 'cloudinary-react';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 // import custom from '../environment';
 import './home.scss';
@@ -17,9 +18,19 @@ class Home extends Component{
         this.state = {
             userToken: this.props.userToken,
             name: "",
-            room: ""
+            room: "",
+            profilepic: this.props.profilePic,
+            modalShow: false
         }
     }
+    // componentDidMount(){
+    //     axios.get(this.props.profilePic)
+    //         .then((res) => {
+    //             this.setState({
+    //                 profilepic: res
+    //             })
+    //         })
+    // }
     onChangeName(e){
         this.setState({
             name: e.target.value
@@ -33,7 +44,29 @@ class Home extends Component{
     render(){
         return(
             <div className="home-body">
-                <h1>Hi {this.props.userToken}</h1>  
+                {this.state.modalShow && <div className="spinner-body">
+                    <div className="spinner-border text-success" role="status"></div>
+                </div>}
+                <h1>Hi {this.props.userName}</h1>  
+                <CloudinaryContext cloudName="chatify">
+                    <div>
+                        {!this.state.update && <div><Image publicId={this.state.profilepic} version={this.props.picVersion} width="200" height="200" />
+                        <br />
+                        <br />
+                        </div>}
+                        {this.state.update && <div>
+                        <img src={this.state.file} width="200" height="200" alt="profile" />
+                        <br />
+                        <br />
+                        </div>}
+                        <label className="custom-file-upload btn">
+                            <input type="file" onChange={this.handleChange} accept="image/*"/>
+                            Select Profile Picture
+                        </label>
+                        <br />
+                        <button className="my-2 btn btn-green-style" onClick={this.uploadProfilePic}>Upload Profile Picture</button>
+                    </div>
+                </CloudinaryContext>
                 <Link to={"/profile"}>Profile</Link>
 
                 <div className="joinOuterContainer">

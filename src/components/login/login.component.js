@@ -59,8 +59,10 @@ class Login extends Component{
                 modalShow: false
             });
             if (res.status === 200) {
-                this.props.setSession(res.data);
+                console.log(res.data);
+                // this.props.setSession(res.data);
                 this.props.setUser(this.state.token);
+                this.props.setSession(res.data);
                 this.setState({
                     modalShow: false
                 })

@@ -1,10 +1,12 @@
 export const stateToProps = (state) => {
-    console.log(state.login.userToken);
+    // console.log(state.session.picVersion);
+    // console.log(state.login.userToken);
     return {
         userToken: state.login.userToken,
         userName: state.session.userName,
         profilePic: state.session.profilePic,
-        lastLoggedIn: state.session.lastLoggedIn
+        lastLoggedIn: state.session.lastLoggedIn,
+        picVersion: state.session.picVersion
     } 
 }
 
@@ -24,7 +26,8 @@ export const DispatchToProps = (dispatch) => {
                 sessionData: {
                     userName: session.userName,
                     profilePic: session.profilePic,
-                    lastLoggedIn: session.lastLoggedIn
+                    lastLoggedIn: session.lastLoggedIn,
+                    picVersion: session.picVersion
                 }
             })
         }

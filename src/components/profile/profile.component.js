@@ -4,6 +4,7 @@ import history from '../../history';
 // import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { sha256 } from 'js-sha256';
+import {Image, CloudinaryContext} from 'cloudinary-react';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
 import custom from '../environment';
 import './profile.scss';
@@ -24,7 +25,10 @@ class Profile extends Component{
             file: '',
             base64: '',
             modalShow: false,
-            token: this.props.userToken
+            token: this.props.userToken,
+            picVersion: "",
+            updated: false,
+            cloud: ""
         };
         this.uploadProfilePic = this.uploadProfilePic.bind(this);
         this.changePassword = this.changePassword.bind(this);
@@ -76,6 +80,7 @@ class Profile extends Component{
                         phone: res.data["mobile"],
                         status: res.data["status"],
                         newName: res.data["username"],
+                        picVersion: res.data["picVersion"],
                         profilepic: res.data["profilepic"],
                         statusold: res.data["status"]
                     });
@@ -209,31 +214,28 @@ class Profile extends Component{
 
     handleChange(e) {
         let file = e.target.files[0];
-        let reader = new FileReader();
         let pattern1 = /image-*/;
         if (!file.type.match(pattern1)) {
             alert('invalid format');
         }
         else {
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                this.setState({
-                    file: URL.createObjectURL(file),
-                    profilepic: reader.result
-                });
-            }
+            this.setState({
+                profilepic: URL.createObjectURL(file),
+                updated: true,
+                cloud: e.target.files[0]
+            });
         }
     }
 
     uploadProfilePic() {
+        let file = this.state.cloud;
+        const formData = new FormData();
+        formData.append("pic", file);
+        formData.append("token", this.state.token);
         this.setState({
             modalShow: true
         });
-        let finalJson = {
-        "pic": this.state.profilepic,
-        "token": this.state.token
-        }
-        axios.post(custom.URL + '/user/update_picture', finalJson, custom.options)
+        axios.post(custom.URL + '/user/update_picture', formData, custom.options)
             .then((res) => {
             this.setState({
                 modalShow: false
@@ -260,7 +262,10 @@ class Profile extends Component{
                 <div className="container">
                     <div className="row">
                         <div className="col-xs-12 col-lg-3 py-2 text-center">
-                            <img className = "styled-img" src={this.state.profilepic} alt = "profilepic"/>
+                            {!this.state.updated && <CloudinaryContext cloudName="chatify">
+                                <Image publicId={this.state.profilepic} version={this.state.picVersion} />
+                            </CloudinaryContext>}
+                            {this.state.updated && <img className = "styled-img" src={this.state.profilepic} alt = "profilepic"/>}
                             <br />
                             <h2>{this.state.name}</h2>
                             <h5>{this.state.statusold}</h5>
