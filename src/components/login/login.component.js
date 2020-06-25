@@ -63,10 +63,7 @@ class Login extends Component{
                 // this.props.setSession(res.data);
                 this.props.setUser(this.state.token);
                 this.props.setSession(res.data);
-                this.setState({
-                    modalShow: false
-                })
-                history.push('/profile');
+                history.push('/home');
             }
         })
         .catch(function(error){

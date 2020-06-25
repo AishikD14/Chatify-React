@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-// import axios from 'axios';
-// import history from '../../history';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import history from '../../history';
+// import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {Image, CloudinaryContext} from 'cloudinary-react';
+// import {Image, CloudinaryContext} from 'cloudinary-react';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
-// import custom from '../environment';
+import custom from '../environment';
+import Contacts from './contacts/contacts';
+import Chat from './chat/chat';
 import './home.scss';
 
 class Home extends Component{
@@ -14,23 +16,57 @@ class Home extends Component{
 
         this.onChangeName = this.onChangeName.bind(this);
         this.onChangeRoom = this.onChangeRoom.bind(this);
+        this.getUserDetails = this.getUserDetails.bind(this);
 
         this.state = {
-            userToken: this.props.userToken,
+            token: this.props.userToken,
             name: "",
             room: "",
             profilepic: this.props.profilePic,
             modalShow: false
         }
     }
-    // componentDidMount(){
-    //     axios.get(this.props.profilePic)
-    //         .then((res) => {
-    //             this.setState({
-    //                 profilepic: res
-    //             })
-    //         })
-    // }
+    componentDidMount(){
+        if (this.state.token === '' || this.state.token === null || this.state.token === undefined) {
+            if(localStorage.getItem("sessionToken") === '' || localStorage.getItem("sessionToken") === null || localStorage.getItem("sessionToken") === undefined){
+                history.push("/");
+            }
+            else{
+                this.setState({
+                    token: localStorage.getItem('sessionToken')
+                });
+                this.props.setUser(localStorage.getItem('sessionToken'));
+                this.getUserDetails(localStorage.getItem('sessionToken'));
+            }
+        } 
+    }
+    getUserDetails(token){
+        let payload = {
+            "token": token
+        }
+        this.setState({
+            modalShow: true
+        })
+        axios.post(custom.URL + "/user/get_session", payload, custom.options)
+            .then((res) => {
+                this.setState({
+                    modalShow: false
+                })
+                if (res.status === 200) {
+                    console.log(res.data);
+                    this.props.setSession(res.data);
+                }
+                else{
+                    history.push("/");
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    modalShow: false
+                })
+                console.log(err);
+            });
+    }
     onChangeName(e){
         this.setState({
             name: e.target.value
@@ -47,36 +83,13 @@ class Home extends Component{
                 {this.state.modalShow && <div className="spinner-body">
                     <div className="spinner-border text-success" role="status"></div>
                 </div>}
-                <h1>Hi {this.props.userName}</h1>  
-                <CloudinaryContext cloudName="chatify">
-                    <div>
-                        {!this.state.update && <div><Image publicId={this.state.profilepic} version={this.props.picVersion} width="200" height="200" />
-                        <br />
-                        <br />
-                        </div>}
-                        {this.state.update && <div>
-                        <img src={this.state.file} width="200" height="200" alt="profile" />
-                        <br />
-                        <br />
-                        </div>}
-                        <label className="custom-file-upload btn">
-                            <input type="file" onChange={this.handleChange} accept="image/*"/>
-                            Select Profile Picture
-                        </label>
-                        <br />
-                        <button className="my-2 btn btn-green-style" onClick={this.uploadProfilePic}>Upload Profile Picture</button>
+                
+                <div className="row home-content">
+                    <div className="col-sm-4 col-xs-12 no-gutter">
+                        <Contacts />
                     </div>
-                </CloudinaryContext>
-                <Link to={"/profile"}>Profile</Link>
-
-                <div className="joinOuterContainer">
-                    <div className="joinInnerContainer">
-                        <h1 className="heading">Join</h1>
-                        <div><input placeholder="Name" className="joinInput" type="text" onChange={this.onChangeName} /></div>
-                        <div><input placeholder="Room" className="joinInput mt-20" type="text" onChange={this.onChangeRoom} /></div>
-                        <Link onClick={event => (!this.state.name || !this.state.room)? event.preventDefault() : null} to={`/chat?name=${this.state.name}&room=${this.state.room}`}>
-                            <button className="button mt-20" type="submit">Sign In</button>
-                        </Link>
+                    <div className="col-sm-8 col-xs-12 no-gutter">
+                        <Chat />
                     </div>
                 </div>
             </div>

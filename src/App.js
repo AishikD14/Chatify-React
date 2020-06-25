@@ -12,13 +12,15 @@ import Profile from './components/profile/profile.component';
 import Chat from './components/chat/chat.component';
 import { loginReducer } from './reducer/login-reducer';
 import { sessionReducer } from './reducer/session-reducer';
+import { chatReducer } from './reducer/chat-reducer';
 import { Provider } from 'react-redux'; 
 import { createStore, combineReducers } from 'redux';
 import './App.scss';
 
 const reducers = combineReducers({
   login: loginReducer,
-  session: sessionReducer
+  session: sessionReducer,
+  chat: chatReducer
 });
 
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());

@@ -2,6 +2,17 @@
     font-family: 'Roboto', sans-serif;
     padding: 0;
     margin: 0;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    height: 100%;
+    background-image: url("../../assets/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    .home-content{
+      max-width: 85%;
+      height: 100%;
+      margin: auto;
+    }
 }
   
 #root {
