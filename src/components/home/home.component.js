@@ -85,10 +85,10 @@ class Home extends Component{
                 </div>}
                 
                 <div className="row home-content">
-                    <div className="col-sm-4 col-xs-12 no-gutter">
+                    <div className="contact-tab">
                         <Contacts />
                     </div>
-                    <div className="col-sm-8 col-xs-12 no-gutter">
+                    <div className="chat-tab">
                         <Chat />
                     </div>
                 </div>

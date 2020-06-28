@@ -12,6 +12,12 @@
       max-width: 85%;
       height: 100%;
       margin: auto;
+      .contact-tab{
+        width: 33.33%;
+      }
+      .chat-tab{
+        width: 66.66%;
+      }
     }
 }
   
@@ -98,4 +104,17 @@
     button:focus {
       outline: 0;
     }
+}
+
+@media (min-width: 320px) and (max-width: 767px) {
+  .home-body{
+    .home-content{
+      .contact-tab, .chat-tab{
+        width: 100%;
+      }
+      .chat-tab{
+        display: none;
+      }
+    }
+  }
 }

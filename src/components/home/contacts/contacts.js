@@ -139,16 +139,16 @@ const Contacts = () => {
                 {contactList.map((contact) => {
                     return(
                     <div className="contact" key={contact.email}>
-                        <div className="row">
-                            <div className="col-sm-2">
+                        {/* <div className="row"> */}
+                            <div className="left-item">
                                 <CloudinaryContext cloudName="chatify">
                                     <Image publicId={contact.profilePic} version={contact.picVersion} />
                                 </CloudinaryContext>
                             </div>
-                            <div className="col-sm-10 no-gutter">
+                            <div className="right-item">
                                 <p className="contact-name" value={contact.email} onClick={() => {openChat({contact})}}>{contact.userName}</p>
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>
                     )
                 })}
