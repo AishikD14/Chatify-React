@@ -1,3 +1,5 @@
+@import '../../../App.scss';
+
 .chat-body{
     .MuiAppBar-colorPrimary{
         background-color: rgb(237, 237, 237);
@@ -14,5 +16,103 @@
         height: 50px;
         width: 50px;
         border-radius: 50%;
+    }
+}
+    
+// Kebab styling
+
+.chat-body{
+    .kebab {
+        cursor: pointer;
+        position: relative;
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 16px;
+        top: 12px;
+        margin-bottom: 20px;
+        figure {
+            width: 6px;
+            height: 6px;
+            border-radius: 5px;
+            background: $cyan;
+            margin: 3px 0;
+        }
+    }
+
+    .middle1 {
+        transition: all 0.25s $cubic-in;
+        transform: scale(1);
+        position: relative;
+        box-shadow: 0 0.1px 0.1px 0 rgba(0, 0, 0, 0.16), 0 0.1px 0.3px 0 rgba(0, 0, 0, 0.12);
+        -webkit-filter: blur(.1px);
+        filter: blur(.1px);
+    }
+
+    .middle1.active {
+        transform: scale(4.5);
+        transition: all 0.25s $cubic-out;
+        box-shadow: 0 0.1px 0.1px 0 rgba(0, 0, 0, 0.16), 0 0.1px 0.3px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .cross1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        margin-top: -1px;
+        font-family: $nunito;
+        color: white;
+        transition: all 0.2s $cubic-in;
+        font-size: 22px;
+        user-select: none;
+    }
+
+    .cross1.active {
+        transform: translate(-50%, -50%) scale(1);
+        transition: all 0.15s $cubic-out;
+    }
+
+    .dropdown1 {
+        position: absolute;
+        right: 4px;
+        padding: 0;
+        top: 2em;
+        transition: all 0.25s ease-out;
+        transform: scale(0);
+        transform-origin: 100% 0;
+        box-shadow: $shadow;
+        li {
+            display: block;
+            width: 100%;
+            a,p {
+                width: 100%;
+                padding: 1em 28px;
+                display: inline-block;
+                white-space: pre;
+                box-sizing: border-box;
+                &:hover {
+                background: lighten($grey, 30%);
+                }
+            }
+            p{
+                margin-bottom: 0;
+            }
+        }
+        &:hover {
+            ul {
+                transform: scale(1);
+            }
+        }
+    }
+
+    .dropdown1.active {
+        transform: scale(1);
+        transition: all 0.25s cubic-bezier(.5,1.8,.9,.8);
+        background-color: white;
+    }
+
+    a, li {
+        color: darken($grey, 20%);
+        text-decoration: none;
     }
 }

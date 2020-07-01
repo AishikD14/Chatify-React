@@ -8,10 +8,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import axios from 'axios';
 import {Image, CloudinaryContext} from 'cloudinary-react';
 import './contacts.scss';
@@ -32,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 const Contacts = () => {
 
     const classes = useStyles();
-    const [anchorEl, setAnchorEl] = useState(null);
 
     const tokens = useSelector(state => state.login.userToken);
     const pictures = useSelector(state => state.session.profilePic);
@@ -50,26 +45,15 @@ const Contacts = () => {
         setPicture(pictures);
         setPicVersion(versions);
     },[tokens, pictures, versions]);
-
-    const handleClick = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
+    
     const logoutHandleClose = () => {
-        setAnchorEl(null);
         localStorage.setItem('sessionToken', '');
         history.push("/");
     }
 
     const profileHandleClose = () => {
-        setAnchorEl(null);
         history.push("/profile");
     }
-
 
     const getContacts = () => {
         if(token !== "" ){
@@ -94,10 +78,21 @@ const Contacts = () => {
 
     useEffect(() => {
         getContacts();
+    // eslint-disable-next-line
     },[token]);
 
     const openChat = (contact) => {
         dispatch(setChat(contact));
+    }
+
+    const kebab = () => {
+        var middle = document.querySelector('.middle'),
+        cross = document.querySelector('.cross'),
+        dropdown = document.querySelector('.dropdown');
+
+        middle.classList.toggle('active');
+        cross.classList.toggle('active');
+        dropdown.classList.toggle('active');
     }
 
     return(
@@ -108,29 +103,22 @@ const Contacts = () => {
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                    <CloudinaryContext cloudName="chatify">
-                        <Image publicId={picture} version={picVersion} />
-                    </CloudinaryContext> &nbsp;
-                    <Typography variant="h6" className={classes.title}>
-                        Chatify
-                    </Typography>
-                    <Button
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                >
-                    <MoreVertIcon />
-                </Button>
-                <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={profileHandleClose}>Profile</MenuItem>
-                    <MenuItem onClick={logoutHandleClose}>Logout</MenuItem>
-                </Menu>
+                        <CloudinaryContext cloudName="chatify">
+                            <Image publicId={picture} version={picVersion} />
+                        </CloudinaryContext> &nbsp;
+                        <Typography variant="h6" className={classes.title}>
+                            Chatify
+                        </Typography>
+                        <div className="kebab" onClick={kebab}>
+                            <figure></figure>
+                            <figure className="middle"></figure>
+                            <p className="cross">x</p>
+                            <figure></figure>
+                            <ul className="dropdown">
+                            <li><p onClick={profileHandleClose}>Profile</p></li>
+                            <li><p onClick={logoutHandleClose}>Logout</p></li>
+                            </ul>
+                        </div>
                     </Toolbar>
                 </AppBar>
             </div>
@@ -138,17 +126,15 @@ const Contacts = () => {
             <div className="contact-list">
                 {contactList.map((contact) => {
                     return(
-                    <div className="contact" key={contact.email}>
-                        {/* <div className="row"> */}
-                            <div className="left-item">
-                                <CloudinaryContext cloudName="chatify">
-                                    <Image publicId={contact.profilePic} version={contact.picVersion} />
-                                </CloudinaryContext>
-                            </div>
-                            <div className="right-item">
-                                <p className="contact-name" value={contact.email} onClick={() => {openChat({contact})}}>{contact.userName}</p>
-                            </div>
-                        {/* </div> */}
+                    <div className="contact" key={contact.email} onClick={() => {openChat({contact})}}>
+                        <div className="left-item">
+                            <CloudinaryContext cloudName="chatify">
+                                <Image publicId={contact.profilePic} version={contact.picVersion} />
+                            </CloudinaryContext>
+                        </div>
+                        <div className="right-item">
+                            <p className="contact-name" value={contact.email}>{contact.userName}</p>
+                        </div>
                     </div>
                     )
                 })}

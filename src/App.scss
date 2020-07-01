@@ -22,3 +22,14 @@
 .no-gutter{
     padding: 0;
 }
+
+$cubic-out: cubic-bezier(.32,2.04,.85,.54);
+$cubic-in: cubic-bezier(.72,1.2,.71,.72);
+$nunito: 'Nunito', sans-serif;
+$roboto: Roboto, sans-serif;
+
+$cyan: #00bcd4;
+$yellow: #ffeb3b;
+$grey: #9e9e9e;
+
+$shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 8px 0 rgba(0, 0, 0, 0.12);
