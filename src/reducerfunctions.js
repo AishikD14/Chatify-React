@@ -27,7 +27,8 @@ export const DispatchToProps = (dispatch) => {
                     userName: session.userName,
                     profilePic: session.profilePic,
                     lastLoggedIn: session.lastLoggedIn,
-                    picVersion: session.picVersion
+                    picVersion: session.picVersion,
+                    email: session.email
                 }
             })
         }

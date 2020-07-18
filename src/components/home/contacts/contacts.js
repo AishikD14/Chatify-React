@@ -62,7 +62,7 @@ const Contacts = () => {
                 .then((res) => {
                     setModal(false);
                     if(res.status === 200){
-                        console.log(res.data);
+                        // console.log(res.data);
                         setContactList(res.data);
                     }
                     else{
@@ -86,12 +86,12 @@ const Contacts = () => {
     }
 
     const kebab = () => {
-        var middle = document.querySelector('.middle'),
-        cross = document.querySelector('.cross'),
-        dropdown = document.querySelector('.dropdown');
+        // var middle = document.querySelector('.middle');
+        // var cross = document.querySelector('.cross');
+        var dropdown = document.querySelector('.dropdown');
 
-        middle.classList.toggle('active');
-        cross.classList.toggle('active');
+        // middle.classList.toggle('active');
+        // cross.classList.toggle('active');
         dropdown.classList.toggle('active');
     }
 
@@ -124,7 +124,7 @@ const Contacts = () => {
             </div>
         
             <div className="contact-list">
-                {contactList.map((contact) => {
+                {contactList.length && contactList.map((contact) => {
                     return(
                     <div className="contact" key={contact.email} onClick={() => {openChat({contact})}}>
                         <div className="left-item">
@@ -138,6 +138,12 @@ const Contacts = () => {
                     </div>
                     )
                 })}
+                {!contactList.length && <div className="contact">
+                    <div className="right-item" style={{margin: "auto"}}>
+                        <p className="contact-name" >No available contacts</p>
+                    </div>
+                </div>
+                }
             </div>
         </div>
     )

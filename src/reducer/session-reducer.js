@@ -2,7 +2,8 @@ const initialState = {
     userName: "",
     profilePic: "",
     lastLoggedIn: "",
-    picVersion: ""
+    picVersion: "",
+    email: ""
 };
 
 export const sessionReducer = ( state = initialState, action) => {
@@ -12,7 +13,8 @@ export const sessionReducer = ( state = initialState, action) => {
                 userName: action.sessionData.userName,
                 profilePic: action.sessionData.profilePic,
                 lastLoggedIn: action.sessionData.lastLoggedIn,
-                picVersion: action.sessionData.picVersion
+                picVersion: action.sessionData.picVersion,
+                email: action.sessionData.email
             }
         default:
             return state

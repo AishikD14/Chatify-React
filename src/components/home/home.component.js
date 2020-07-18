@@ -3,8 +3,8 @@ import axios from 'axios';
 import history from '../../history';
 // import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import {Image, CloudinaryContext} from 'cloudinary-react';
 import { stateToProps, DispatchToProps } from '../../reducerfunctions';
+import $ from 'jquery';
 import custom from '../environment';
 import Contacts from './contacts/contacts';
 import Chat from './chat/chat';
@@ -27,6 +27,27 @@ class Home extends Component{
         }
     }
     componentDidMount(){
+        $(document).mouseup(function(e){
+            var kebabMenu = $(".kebab .dropdown");
+            if($(".kebab .dropdown").hasClass("active")){
+                if(e.which === 1){
+                    if(!kebabMenu.is(e.target) && kebabMenu.has(e.target).length === 0){
+                        let dropdown = document.querySelector('.dropdown');
+                        dropdown.classList.toggle('active');
+                    }
+                }
+            }
+            var kebabMenu1 = $(".kebab .dropdown1");
+            if($(".kebab .dropdown1").hasClass("active")){
+                if(e.which === 1){
+                    if(!kebabMenu1.is(e.target) && kebabMenu1.has(e.target).length === 0){
+                        let dropdown = document.querySelector('.dropdown1');
+                        dropdown.classList.toggle('active');
+                    }
+                }
+            }
+        })
+
         if (this.state.token === '' || this.state.token === null || this.state.token === undefined) {
             if(localStorage.getItem("sessionToken") === '' || localStorage.getItem("sessionToken") === null || localStorage.getItem("sessionToken") === undefined){
                 history.push("/");
@@ -53,7 +74,7 @@ class Home extends Component{
                     modalShow: false
                 })
                 if (res.status === 200) {
-                    console.log(res.data);
+                    // console.log(res.data);
                     this.props.setSession(res.data);
                 }
                 else{
