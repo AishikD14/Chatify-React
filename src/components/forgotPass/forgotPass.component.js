@@ -70,7 +70,6 @@ class ForgotPass extends Component{
 
         axios.post(custom.URL + "/user/forgot_password",user, custom.options)
             .then(res => {
-                console.log(res.data);
                 this.setState({
                     modalShow: false
                 })
@@ -84,7 +83,6 @@ class ForgotPass extends Component{
             })
             .catch(function(error){
                 alert("Something went wrong");
-                console.log(error);
             });
         this.setState({
             email: ""
@@ -99,30 +97,30 @@ class ForgotPass extends Component{
                     <div className="spinner-border text-success" role="status"></div>
                 </div>}
                 <div className="forgot-body">
-                <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
-                <div className="container">
-                    <div className="img">
-                        <img src={require("../../assets/login.svg")} alt="background"/>
-                    </div>
-                    <div className="login-content">
-                        <form onSubmit={this.onSubmitForgot}>
-                            <img src={require("../../assets/avatar.svg")} alt="avatar"/>
-                            <h2 className="title">Forgot Pass</h2>
-                            <div className="input-div one">
-                                <div className="i">
-                                        <i className="fas fa-envelope"></i>
+                    <img className="wave" src={require("../../assets/wave.png")} alt="wave"/>    
+                    <div className="container">
+                        <div className="img">
+                            <img src={require("../../assets/login.svg")} alt="background"/>
+                        </div>
+                        <div className="login-content">
+                            <form onSubmit={this.onSubmitForgot}>
+                                <img src={require("../../assets/avatar.svg")} alt="avatar"/>
+                                <h2 className="title">Forgot Pass</h2>
+                                <div className="input-div one">
+                                    <div className="i">
+                                            <i className="fas fa-envelope"></i>
+                                    </div>
+                                    <div className="div">
+                                            <h5>Email</h5>
+                                            <input type="email" className="input" required value={this.state.email} onChange={this.onChangeEmail}/>
+                                    </div>
                                 </div>
-                                <div className="div">
-                                        <h5>Email</h5>
-                                        <input type="email" className="input" required value={this.state.email} onChange={this.onChangeEmail}/>
-                                </div>
-                            </div>
-                            <Link to={"/"} className="signin-link">Ready to Sign In</Link>
-                            <input type="submit" className="btn" value="Get Reset Link" />
-                        </form>
+                                <Link to={"/"} className="signin-link">Ready to Sign In</Link>
+                                <input type="submit" className="btn" value="Get Reset Link" />
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         );
     }
