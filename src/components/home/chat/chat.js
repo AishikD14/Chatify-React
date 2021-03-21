@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-// import custom from '../../environment';
+import custom from '../../environment';
 // import history from '../../../history';
 import { Link } from 'react-router-dom';
 import { sha256 } from 'js-sha256';
@@ -41,7 +41,7 @@ const Chat = () => {
     // const [messages, setMessages] = useState([]);
     // const [modal, setModal] = useState(false);
 
-    const ENDPOINT = "localhost:5000";
+    const ENDPOINT = custom.URL;
     let socket;
 
     useEffect(() => {
