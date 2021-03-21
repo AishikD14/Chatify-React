@@ -47,7 +47,7 @@ const Contacts = () => {
         setToken(tokens);
         setPicture(pictures);
         setPicVersion(versions);
-    },[tokens, pictures, versions]);
+    },[tokens, pictures, versions, emails]);
     
     const logoutHandleClose = () => {
         localStorage.setItem('sessionToken', '');
