@@ -30,10 +30,10 @@ const Chat = () => {
     const classes = useStyles();
 
     const token = useSelector(state => state.login.userToken);
-    const chatPicture = useSelector(state => state.chat.picture);
-    const chatPicVersion = useSelector(state => state.chat.picVersion);
-    const chatName = useSelector(state => state.chat.name);
-    const chatEmail = useSelector(state => state.chat.email);
+    var chatPicture = useSelector(state => state.chat.picture);
+    var chatPicVersion = useSelector(state => state.chat.picVersion);
+    var chatName = useSelector(state => state.chat.name);
+    var chatEmail = useSelector(state => state.chat.email);
     const selfName = useSelector(state => state.session.userName);
     const selfEmail = useSelector(state => state.session.email);
 
@@ -61,8 +61,11 @@ const Chat = () => {
             socket = io(ENDPOINT);
             socket.emit('join', { name, room }, (callback) => {
                 console.log(callback);
-     
             });
+
+            socket.on('message', (message) => {
+                console.log(message.text);
+            })
 
             return () => {
                 socket.emit('disconnect');
