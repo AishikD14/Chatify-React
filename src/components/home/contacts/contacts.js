@@ -32,6 +32,8 @@ const Contacts = () => {
     const tokens = useSelector(state => state.login.userToken);
     const pictures = useSelector(state => state.session.profilePic);
     const versions = useSelector(state => state.session.picVersion);
+    const emails = useSelector(state => state.session.email);
+    const [email, setEmail] = useState("");
     const [token, setToken] = useState("");
     const [picture, setPicture] = useState("");
     const [picVersion, setPicVersion] = useState("");
@@ -41,6 +43,7 @@ const Contacts = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        setEmail(emails);
         setToken(tokens);
         setPicture(pictures);
         setPicVersion(versions);
@@ -56,14 +59,13 @@ const Contacts = () => {
     }
 
     const getContacts = () => {
-        if(token !== "" ){
+        if(token !== "" && email!==""){
             setModal(true);
             axios.get(custom.URL + "/user/get_contacts", custom.options)
                 .then((res) => {
                     setModal(false);
                     if(res.status === 200){
-                        // console.log(res.data);
-                        setContactList(res.data);
+                        setContactList(res.data.filter((contact) => contact.email!==email));
                     }
                     else{
                         console.log("No contacts");
@@ -79,7 +81,7 @@ const Contacts = () => {
     useEffect(() => {
         getContacts();
     // eslint-disable-next-line
-    },[token]);
+    },[token, email]);
 
     const openChat = (contact) => {
         dispatch(setChat(contact));
@@ -126,16 +128,16 @@ const Contacts = () => {
             <div className="contact-list">
                 {contactList.length && contactList.map((contact) => {
                     return(
-                    <div className="contact" key={contact.email} onClick={() => {openChat({contact})}}>
-                        <div className="left-item">
-                            <CloudinaryContext cloudName="chatify">
-                                <Image publicId={contact.profilePic} version={contact.picVersion} />
-                            </CloudinaryContext>
+                        <div className="contact" key={contact.email} onClick={() => {openChat({contact})}}>
+                            <div className="left-item">
+                                <CloudinaryContext cloudName="chatify">
+                                    <Image publicId={contact.profilePic} version={contact.picVersion} />
+                                </CloudinaryContext>
+                            </div>
+                            <div className="right-item">
+                                <p className="contact-name" value={contact.email}>{contact.userName}</p>
+                            </div>
                         </div>
-                        <div className="right-item">
-                            <p className="contact-name" value={contact.email}>{contact.userName}</p>
-                        </div>
-                    </div>
                     )
                 })}
                 {!contactList.length && <div className="contact">

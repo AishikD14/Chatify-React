@@ -6,7 +6,8 @@ export const stateToProps = (state) => {
         userName: state.session.userName,
         profilePic: state.session.profilePic,
         lastLoggedIn: state.session.lastLoggedIn,
-        picVersion: state.session.picVersion
+        picVersion: state.session.picVersion,
+        email: state.session.email
     } 
 }
 
