@@ -29,11 +29,10 @@ const Chat = () => {
 
     const classes = useStyles();
 
-    const token = useSelector(state => state.login.userToken);
-    var chatPicture = useSelector(state => state.chat.picture);
-    var chatPicVersion = useSelector(state => state.chat.picVersion);
-    var chatName = useSelector(state => state.chat.name);
-    var chatEmail = useSelector(state => state.chat.email);
+    const chatPicture = useSelector(state => state.chat.picture);
+    const chatPicVersion = useSelector(state => state.chat.picVersion);
+    const chatName = useSelector(state => state.chat.name);
+    const chatEmail = useSelector(state => state.chat.email);
     const selfName = useSelector(state => state.session.userName);
     const selfEmail = useSelector(state => state.session.email);
 
@@ -45,8 +44,7 @@ const Chat = () => {
     let socket;
 
     useEffect(() => {
-        // console.log(token);
-        if(token !== ""){
+        if(chatName !== "" && chatEmail !== ""){
             const name = selfName;
             var room = "";
             var sortValue = selfEmail.localeCompare(chatEmail);
@@ -56,10 +54,9 @@ const Chat = () => {
             else{
                 room = sha256(chatEmail + selfEmail);
             }
-
             // eslint-disable-next-line
             socket = io(ENDPOINT);
-            socket.emit('join', { name, room }, (callback) => {
+            socket.emit('join', { name, chatName, room }, (callback) => {
                 console.log(callback);
             });
 
