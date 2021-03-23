@@ -11,6 +11,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {Image, CloudinaryContext} from 'cloudinary-react';
 import io from 'socket.io-client';
+// import Messages from '../../Messages/Messages.component';
 import './chat.scss';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +37,7 @@ const Chat = () => {
     const selfName = useSelector(state => state.session.userName);
     const selfEmail = useSelector(state => state.session.email);
 
-    // const [message, setMessage] = useState("");
+    const [message, setMessage] = useState("");
     // const [messages, setMessages] = useState([]);
     // const [modal, setModal] = useState(false);
 
@@ -64,6 +65,10 @@ const Chat = () => {
                 console.log(message.text);
             })
 
+            // socket.emit('sendMessage', (message) => {
+            //     console.log(message.text);
+            // })
+
             return () => {
                 socket.emit('disconnect');
                 socket.off();
@@ -82,6 +87,14 @@ const Chat = () => {
 
     const addToContact = () => {
         alert("Add to contact in progress");
+    }
+
+    const onChangeMessage = (e) => {
+        setMessage(e.target.value);
+    }
+
+    const onSubmitMessage = () => {
+
     }
 
     const kebab = () => {
@@ -118,6 +131,15 @@ const Chat = () => {
                     </Toolbar>
                 </AppBar>
             </div>  
+            <div className="chat-message">
+                {/* <Messages /> */}
+            </div>
+            <div className="chat-input">
+                <form onSubmit={onSubmitMessage}>
+                    <input type="text" className="text" value={message} onChange={onChangeMessage} />
+                    <input type="submit" className="btn" value="Send" />
+                </form>
+            </div>
         </div>
     )
 }

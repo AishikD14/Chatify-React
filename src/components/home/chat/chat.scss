@@ -1,6 +1,8 @@
 @import '../../../App.scss';
 
 .chat-body{
+    position: relative;
+    height: 100%;
     .MuiAppBar-colorPrimary{
         background-color: rgb(237, 237, 237);
         .MuiToolbar-gutters {
@@ -16,6 +18,31 @@
         height: 50px;
         width: 50px;
         border-radius: 50%;
+    }
+
+    .chat-input{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 5px 10px;
+        background-color: #ededed;
+        height: 50px;
+        form{
+            width: 100%;
+            .text{
+                width: 80%;
+                border: 1px solid #9a9a9a;
+                padding: 0 16px;
+                height: 40px;
+            }
+            .btn{
+                width: calc(20% - 10px);
+                padding: 0;
+                background-color: #38d39f;
+                margin-left: 10px;
+                height: 40px;
+            }
+        }
     }
 }
     
