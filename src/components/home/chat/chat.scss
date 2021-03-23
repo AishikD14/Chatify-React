@@ -46,6 +46,11 @@
                 }
             }
         }
+
+        .chat-message{
+            background-image: url("../../../assets/chat-wallpaper.jpg");
+            height: calc(100% - 80px);
+        }
     }
         
     // Kebab styling

@@ -60,7 +60,7 @@ const Chat = () => {
             // eslint-disable-next-line
             let soc = io(ENDPOINT);
             setSocket(soc);
-            
+
             soc.emit('join', { name, chatName, room }, (callback) => {
                 console.log(callback);
             });
@@ -106,7 +106,6 @@ const Chat = () => {
         else{
             room = sha256(chatEmail + selfEmail);
         }
-        console.log(socket);
         socket.emit('sendMessage', { name, text, room}, (callback) => {
             console.log(callback);
         })
