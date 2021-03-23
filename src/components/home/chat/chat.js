@@ -36,13 +36,15 @@ const Chat = () => {
     const chatEmail = useSelector(state => state.chat.email);
     const selfName = useSelector(state => state.session.userName);
     const selfEmail = useSelector(state => state.session.email);
+    const showChat = useSelector(state => state.room.showChat);
 
     const [message, setMessage] = useState("");
+    const [output, setOutput] = useState("");
+    const [socket, setSocket] = useState();
     // const [messages, setMessages] = useState([]);
     // const [modal, setModal] = useState(false);
 
     const ENDPOINT = custom.URL;
-    let socket;
 
     useEffect(() => {
         if(chatName !== "" && chatEmail !== ""){
@@ -56,24 +58,23 @@ const Chat = () => {
                 room = sha256(chatEmail + selfEmail);
             }
             // eslint-disable-next-line
-            socket = io(ENDPOINT);
-            socket.emit('join', { name, chatName, room }, (callback) => {
+            let soc = io(ENDPOINT);
+            setSocket(soc);
+            
+            soc.emit('join', { name, chatName, room }, (callback) => {
                 console.log(callback);
             });
 
-            socket.on('message', (message) => {
-                console.log(message.text);
+            soc.on('message', (message) => {
+                setOutput(message.text);
             })
 
-            // socket.emit('sendMessage', (message) => {
-            //     console.log(message.text);
-            // })
-
             return () => {
-                socket.emit('disconnect');
-                socket.off();
+                soc.emit('disconnect');
+                soc.off();
             }
         }
+        // eslint-disable-next-line
     },[chatName, chatEmail]);
 
     // useEffect(() => {
@@ -93,8 +94,22 @@ const Chat = () => {
         setMessage(e.target.value);
     }
 
-    const onSubmitMessage = () => {
-
+    const onSubmitMessage = (e) => {
+        e.preventDefault();
+        let text = message;
+        let room = "";
+        let name = selfName;
+        var sortValue = selfEmail.localeCompare(chatEmail);
+        if(sortValue===-1){
+            room = sha256(selfEmail + chatEmail);
+        }
+        else{
+            room = sha256(chatEmail + selfEmail);
+        }
+        console.log(socket);
+        socket.emit('sendMessage', { name, text, room}, (callback) => {
+            console.log(callback);
+        })
     }
 
     const kebab = () => {
@@ -108,38 +123,47 @@ const Chat = () => {
     }
 
     return(
-        <div className="chat-body">
-            <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        {chatPicture && <CloudinaryContext cloudName="chatify">
-                            <Image publicId={chatPicture} version={chatPicVersion} />
-                        </CloudinaryContext>} &nbsp;
-                        <Typography variant="h6" className={classes.title}>
-                            <span className="header-name">{chatName}</span>
-                        </Typography>
-                        <div className="kebab" onClick={kebab}>
-                            <figure></figure>
-                            <figure className="middle1"></figure>
-                            <p className="cross1">x</p>
-                            <figure></figure>
-                            <ul className="dropdown1">
-                            <li><Link to={"/contact_info"}>Contact Info</Link></li>
-                            <li><p onClick={addToContact}>Add to contacts</p></li>
-                            </ul>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-            </div>  
-            <div className="chat-message">
-                {/* <Messages /> */}
-            </div>
-            <div className="chat-input">
-                <form onSubmit={onSubmitMessage}>
-                    <input type="text" className="text" value={message} onChange={onChangeMessage} />
-                    <input type="submit" className="btn" value="Send" />
-                </form>
-            </div>
+        <div className="chat">
+            {!showChat && <div className="start-chat">
+                <div className="img">
+                    <img src={require("../../../assets/login.svg")} alt="background"/>
+                </div>
+                <p>Please click on a contact to start chatting</p>
+            </div>}
+            {showChat && <div className="chat-body">
+                <div className={classes.root}>
+                    <AppBar position="static">
+                        <Toolbar>
+                            {chatPicture && <CloudinaryContext cloudName="chatify">
+                                <Image publicId={chatPicture} version={chatPicVersion} />
+                            </CloudinaryContext>} &nbsp;
+                            <Typography variant="h6" className={classes.title}>
+                                <span className="header-name">{chatName}</span>
+                            </Typography>
+                            <div className="kebab" onClick={kebab}>
+                                <figure></figure>
+                                <figure className="middle1"></figure>
+                                <p className="cross1">x</p>
+                                <figure></figure>
+                                <ul className="dropdown1">
+                                <li><Link to={"/contact_info"}>Contact Info</Link></li>
+                                <li><p onClick={addToContact}>Add to contacts</p></li>
+                                </ul>
+                            </div>
+                        </Toolbar>
+                    </AppBar>
+                </div>  
+                <div className="chat-message">
+                    <h2>{output}</h2>
+                    {/* <Messages /> */}
+                </div>
+                <div className="chat-input">
+                    <form onSubmit={onSubmitMessage}>
+                        <input type="text" className="text" value={message} onChange={onChangeMessage} />
+                        <input type="submit" className="btn" value="Send" />
+                    </form>
+                </div>
+            </div>}
         </div>
     )
 }

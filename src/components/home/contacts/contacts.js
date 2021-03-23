@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {setChat} from '../../../actions/chat';
+import {setRoom} from '../../../actions/room';
 // import {setsession} from '../../../actions/session';
 import custom from '../../environment';
 import history from '../../../history';
@@ -85,6 +86,7 @@ const Contacts = () => {
 
     const openChat = (contact) => {
         dispatch(setChat(contact));
+        dispatch(setRoom(true));
     }
 
     const kebab = () => {
