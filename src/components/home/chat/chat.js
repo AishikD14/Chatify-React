@@ -11,6 +11,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {Image, CloudinaryContext} from 'cloudinary-react';
 import io from 'socket.io-client';
+import axios from 'axios';
 // import Messages from '../../Messages/Messages.component';
 import './chat.scss';
 
@@ -41,6 +42,9 @@ const Chat = () => {
     const [message, setMessage] = useState("");
     const [output, setOutput] = useState("");
     const [socket, setSocket] = useState();
+    const [modal, setModal] = useState(false);
+    // eslint-disable-next-line
+    const [messageList, setMessageList] = useState([]);
     // const [messages, setMessages] = useState([]);
     // const [modal, setModal] = useState(false);
 
@@ -57,6 +61,27 @@ const Chat = () => {
             else{
                 room = sha256(chatEmail + selfEmail);
             }
+
+            // Retrieve message history for room
+            let payload = {
+                "room": room
+            }
+            setModal(true);
+            axios.post(custom.URL + "/message/get_message_history", payload, custom.options)
+                .then((res) => {
+                    setModal(false);
+                    if(res.status === 200){
+                        setMessageList(res.data.message);
+                    }
+                    else{
+                        console.log("No messages");
+                    }
+                })
+                .catch((err) => {
+                    setModal(false);
+                    console.log(err);
+                });
+
             // eslint-disable-next-line
             let soc = io(ENDPOINT);
             setSocket(soc);
@@ -109,6 +134,7 @@ const Chat = () => {
         socket.emit('sendMessage', { name, text, room}, (callback) => {
             console.log(callback);
         })
+        setMessage("");
     }
 
     const kebab = () => {
@@ -123,6 +149,9 @@ const Chat = () => {
 
     return(
         <div className="chat">
+            {modal && <div className="spinner-body">
+                <div className="spinner-border text-success" role="status"></div>
+            </div>}
             {!showChat && <div className="start-chat">
                 <div className="img">
                     <img src={require("../../../assets/login.svg")} alt="background"/>
@@ -153,8 +182,8 @@ const Chat = () => {
                     </AppBar>
                 </div>  
                 <div className="chat-message">
-                    <h2>{output}</h2>
-                    {/* <Messages /> */}
+                    <h3>{output}</h3>
+                    {/* <Messages messages={output} name="abc"/> */}
                 </div>
                 <div className="chat-input">
                     <form onSubmit={onSubmitMessage}>

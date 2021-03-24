@@ -128,7 +128,7 @@ const Contacts = () => {
             </div>
         
             <div className="contact-list">
-                {contactList.length && contactList.map((contact) => {
+                {contactList.map((contact) => {
                     return(
                         <div className="contact" key={contact.email} onClick={() => {openChat({contact})}}>
                             <div className="left-item">
