@@ -10,19 +10,20 @@
     background-size: cover;
     .home-content{
       max-width: 85%;
-      height: 100%;
+      height: 673px;
       margin: auto;
       .contact-tab{
         width: 33.33%;
       }
       .chat-tab{
         width: 66.66%;
+        height: 100%;
       }
     }
 }
   
 #root {
-  height: 100vh;
+  // height: 100vh;
 }
   
 * {

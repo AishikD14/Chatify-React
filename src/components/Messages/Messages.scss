@@ -1,7 +1,11 @@
 .messages-body{
+  height: 100%;
     .messages {
-        padding: 5% 0;
+        padding: 0;
         overflow: auto;
         flex: auto;
+        height: 100%;
+        padding-top: 0;
+        padding-bottom: 55px;
       }
 }
