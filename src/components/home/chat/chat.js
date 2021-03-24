@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import {Image, CloudinaryContext} from 'cloudinary-react';
 import io from 'socket.io-client';
 import axios from 'axios';
-// import Messages from '../../Messages/Messages.component';
+import Messages from '../../Messages/Messages.component';
 import './chat.scss';
 
 const useStyles = makeStyles((theme) => ({
@@ -40,13 +40,12 @@ const Chat = () => {
     const showChat = useSelector(state => state.room.showChat);
 
     const [message, setMessage] = useState("");
+    // eslint-disable-next-line
     const [output, setOutput] = useState("");
     const [socket, setSocket] = useState();
     const [modal, setModal] = useState(false);
-    // eslint-disable-next-line
+    const [roomType, setRoomType] = useState("");
     const [messageList, setMessageList] = useState([]);
-    // const [messages, setMessages] = useState([]);
-    // const [modal, setModal] = useState(false);
 
     const ENDPOINT = custom.URL;
 
@@ -71,6 +70,7 @@ const Chat = () => {
                 .then((res) => {
                     setModal(false);
                     if(res.status === 200){
+                        setRoomType(res.data.type);
                         setMessageList(res.data.message);
                     }
                     else{
@@ -82,6 +82,7 @@ const Chat = () => {
                     console.log(err);
                 });
 
+            // Socket connections
             // eslint-disable-next-line
             let soc = io(ENDPOINT);
             setSocket(soc);
@@ -101,15 +102,6 @@ const Chat = () => {
         }
         // eslint-disable-next-line
     },[chatName, chatEmail]);
-
-    // useEffect(() => {
-    //     socket.on('message', (message) => {
-    //         console.log(message);
-    //         setMessages([...messages, message]);
-    //         console.log(messages);
-    //     })
-    //     // eslint-disable-next-line
-    // },[messages])
 
     const addToContact = () => {
         alert("Add to contact in progress");
@@ -182,8 +174,7 @@ const Chat = () => {
                     </AppBar>
                 </div>  
                 <div className="chat-message">
-                    <h3>{output}</h3>
-                    {/* <Messages messages={output} name="abc"/> */}
+                    <Messages messages={messageList} name={selfName} type={roomType}/>
                 </div>
                 <div className="chat-input">
                     <form onSubmit={onSubmitMessage}>
