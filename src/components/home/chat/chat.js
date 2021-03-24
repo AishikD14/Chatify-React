@@ -40,8 +40,7 @@ const Chat = () => {
     const showChat = useSelector(state => state.room.showChat);
 
     const [message, setMessage] = useState("");
-    // eslint-disable-next-line
-    const [output, setOutput] = useState("");
+    const [random, setRandom] = useState(0);
     const [socket, setSocket] = useState();
     const [modal, setModal] = useState(false);
     const [roomType, setRoomType] = useState("");
@@ -92,7 +91,7 @@ const Chat = () => {
             });
 
             soc.on('message', (message) => {
-                setOutput(message.text);
+                console.log(message.text);
             })
 
             return () => {
@@ -126,6 +125,14 @@ const Chat = () => {
         socket.emit('sendMessage', { name, text, room}, (callback) => {
             console.log(callback);
         })
+
+        const min = 1;
+        const max = 100;
+        const rand = min + Math.random() * (max - min);
+        messageList.push({_id: random + rand, user: selfName, text: text});
+
+        setRandom(random + rand);
+        setMessageList(messageList);
         setMessage("");
     }
 
