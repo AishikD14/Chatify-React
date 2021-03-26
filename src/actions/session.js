@@ -1,6 +1,6 @@
-export const setsession = (sample) => {
+export const setView = (view) => {
     return{
-        type: "SessionModule",
-        sessionData: sample
+        type: "ViewModule",
+        view: view
     }
 };

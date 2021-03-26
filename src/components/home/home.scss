@@ -18,6 +18,9 @@
       .chat-tab{
         width: 66.66%;
         height: 100%;
+        .fa-arrow-left{
+          display: none;
+        }
       }
     }
 }
@@ -112,11 +115,21 @@
     padding: 0;
     .home-content{
       max-width: none;
+      height: 100vh;
       .contact-tab, .chat-tab{
         width: 100%;
+        display: none;
+      }
+      .contact-tab.active, .chat-tab.active{
+        display: block;
       }
       .chat-tab{
-        display: none;
+        .fa-arrow-left{
+          display: block;
+          padding-right: 10px;
+          color: black;
+          font-size: 23px;
+        }
       }
     }
   }

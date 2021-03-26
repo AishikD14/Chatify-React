@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import {setView} from '../../../actions/session';
 import custom from '../../environment';
 // import history from '../../../history';
 import { Link } from 'react-router-dom';
@@ -38,6 +39,8 @@ const Chat = () => {
     const selfName = useSelector(state => state.session.userName);
     const selfEmail = useSelector(state => state.session.email);
     const showChat = useSelector(state => state.room.showChat);
+
+    const dispatch = useDispatch();
 
     const [message, setMessage] = useState("");
     const [random, setRandom] = useState(0);
@@ -165,6 +168,14 @@ const Chat = () => {
         setMessage("");
     }
 
+    const closeChat = () => {
+        const view = {
+            contact: "active",
+            chat: ""
+        }
+        dispatch(setView(view));
+    }
+
     const kebab = () => {
         // var middle = document.querySelector('.middle1');
         // var cross = document.querySelector('.cross1');
@@ -190,6 +201,7 @@ const Chat = () => {
                 <div className={classes.root}>
                     <AppBar position="static">
                         <Toolbar>
+                            <div><i class="fas fa-arrow-left" onClick={closeChat} ></i></div>
                             {chatPicture && <CloudinaryContext cloudName="chatify">
                                 <Image publicId={chatPicture} version={chatPicVersion} />
                             </CloudinaryContext>} &nbsp;

@@ -106,10 +106,10 @@ class Home extends Component{
                 </div>}
                 
                 <div className="row home-content">
-                    <div className="contact-tab">
+                    <div className={`contact-tab ${this.props.contactView}`}>
                         <Contacts />
                     </div>
-                    <div className="chat-tab">
+                    <div className={`chat-tab ${this.props.chatView}`}>
                         <Chat />
                     </div>
                 </div>

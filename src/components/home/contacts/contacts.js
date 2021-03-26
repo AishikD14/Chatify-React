@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {setChat} from '../../../actions/chat';
 import {setRoom} from '../../../actions/room';
-// import {setsession} from '../../../actions/session';
+import {setView} from '../../../actions/session';
 import custom from '../../environment';
 import history from '../../../history';
 import { makeStyles } from '@material-ui/core/styles';
@@ -85,8 +85,13 @@ const Contacts = () => {
     },[token, email]);
 
     const openChat = (contact) => {
+        const view = {
+            contact: "",
+            chat: "active"
+        }
         dispatch(setChat(contact));
         dispatch(setRoom(true));
+        dispatch(setView(view));
     }
 
     const kebab = () => {

@@ -3,7 +3,9 @@ const initialState = {
     profilePic: "",
     lastLoggedIn: "",
     picVersion: "",
-    email: ""
+    email: "",
+    chatView: "",
+    contactView: "active"
 };
 
 export const sessionReducer = ( state = initialState, action) => {
@@ -14,7 +16,19 @@ export const sessionReducer = ( state = initialState, action) => {
                 profilePic: action.sessionData.profilePic,
                 lastLoggedIn: action.sessionData.lastLoggedIn,
                 picVersion: action.sessionData.picVersion,
-                email: action.sessionData.email
+                email: action.sessionData.email,
+                chatView: state.chatView,
+                contactView: state.contactView
+            }
+        case "ViewModule":
+            return{
+                userName: state.userName,
+                profilePic: state.profilePic,
+                lastLoggedIn: state.lastLoggedIn,
+                picVersion: state.picVersion,
+                email: state.email,
+                chatView: action.view.chat,
+                contactView: action.view.contact
             }
         default:
             return state
