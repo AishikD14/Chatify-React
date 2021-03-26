@@ -43,6 +43,7 @@ const Chat = () => {
     const [random, setRandom] = useState(0);
     const [socket, setSocket] = useState();
     const [modal, setModal] = useState(false);
+    const [lock, setLock] = useState("initial");
     const [roomType, setRoomType] = useState("");
     const [messageList, setMessageList] = useState([]);
 
@@ -51,6 +52,7 @@ const Chat = () => {
     useEffect(() => {
         if(chatName !== "" && chatEmail !== ""){
             const name = selfName;
+            setMessageList([]);
             var room = "";
             var sortValue = selfEmail.localeCompare(chatEmail);
             if(sortValue===-1){
@@ -59,6 +61,11 @@ const Chat = () => {
             else{
                 room = sha256(chatEmail + selfEmail);
             }
+
+            // Socket connections
+            // eslint-disable-next-line
+            let soc = io(ENDPOINT);
+            setSocket(soc);
 
             // Retrieve message history for room
             let payload = {
@@ -71,28 +78,27 @@ const Chat = () => {
                     if(res.status === 200){
                         setRoomType(res.data.type);
                         setMessageList(res.data.message);
+                        setLock("updated");
                     }
-                    else{
+                    else if(res.status === 204){
+                        setRoomType(res.data.type);
+                        setMessageList([]);
+                        setLock("updated");
                         console.log("No messages");
                     }
+                    else{
+                        console.log("Room not present in db");
+                    }
+
+                    soc.emit('join', { name, chatName, room }, (callback) => {
+                        console.log(callback);
+                    });
+
                 })
                 .catch((err) => {
                     setModal(false);
                     console.log(err);
                 });
-
-            // Socket connections
-            // eslint-disable-next-line
-            let soc = io(ENDPOINT);
-            setSocket(soc);
-
-            soc.emit('join', { name, chatName, room }, (callback) => {
-                console.log(callback);
-            });
-
-            soc.on('message', (message) => {
-                console.log(message.text);
-            })
 
             return () => {
                 soc.emit('disconnect');
@@ -102,6 +108,28 @@ const Chat = () => {
         // eslint-disable-next-line
     },[chatName, chatEmail]);
 
+    // Lock present to prevent conflict in update
+    useEffect(() => {
+        if(lock==="updated"){
+            socket.on('message', (message) => {
+                if(message.user !== "admin"){
+                    const min = 1;
+                    const max = 100;
+                    const rand = min + Math.random() * (max - min);
+                    let messageArray = messageList;
+                    messageArray.push({_id: random + rand, user: message.user, text: message.text});
+
+                    setRandom(random + rand);
+                    setMessageList(messageArray);
+                }
+                else{
+                    console.log(message.text);
+                }
+            })
+            setLock("initial");
+        }
+        // eslint-disable-next-line
+    },[messageList, lock]);
     const addToContact = () => {
         alert("Add to contact in progress");
     }
@@ -129,10 +157,11 @@ const Chat = () => {
         const min = 1;
         const max = 100;
         const rand = min + Math.random() * (max - min);
-        messageList.push({_id: random + rand, user: selfName, text: text});
+        let messageArray = messageList;
+        messageArray.push({_id: random + rand, user: selfName, text: text});
 
         setRandom(random + rand);
-        setMessageList(messageList);
+        setMessageList(messageArray);
         setMessage("");
     }
 
