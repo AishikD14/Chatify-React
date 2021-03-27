@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {setView} from '../../../actions/session';
 import custom from '../../environment';
+import { DoEncrypt, DoDecrypt } from '../../../aes';
 // import history from '../../../history';
 import { Link } from 'react-router-dom';
 import { sha256 } from 'js-sha256';
@@ -79,6 +80,9 @@ const Chat = () => {
                 .then((res) => {
                     setModal(false);
                     if(res.status === 200){
+                        for(var i=0; i<res.data.message.length; i++){
+                            res.data.message[i].text = DoDecrypt(res.data.message[i].text);
+                        }
                         setRoomType(res.data.type);
                         setMessageList(res.data.message);
                         setLock("updated");
@@ -120,7 +124,7 @@ const Chat = () => {
                     const max = 100;
                     const rand = min + Math.random() * (max - min);
                     let messageArray = messageList;
-                    messageArray.push({_id: random + rand, user: message.user, text: message.text});
+                    messageArray.push({_id: random + rand, user: message.user, text: DoDecrypt(message.text)});
 
                     setRandom(random + rand);
                     setMessageList(messageArray);
@@ -153,9 +157,13 @@ const Chat = () => {
         else{
             room = sha256(chatEmail + selfEmail);
         }
-        socket.emit('sendMessage', { name, text, room}, (callback) => {
+
+        DoEncrypt(message, (callback) => {
             console.log(callback);
-        })
+            socket.emit('sendMessage', { name, text: callback, room}, (callback) => {
+                console.log(callback);
+            })
+        });
 
         const min = 1;
         const max = 100;
@@ -201,7 +209,7 @@ const Chat = () => {
                 <div className={classes.root}>
                     <AppBar position="static">
                         <Toolbar>
-                            <div><i class="fas fa-arrow-left" onClick={closeChat} ></i></div>
+                            <div><i className="fas fa-arrow-left" onClick={closeChat} ></i></div>
                             {chatPicture && <CloudinaryContext cloudName="chatify">
                                 <Image publicId={chatPicture} version={chatPicVersion} />
                             </CloudinaryContext>} &nbsp;

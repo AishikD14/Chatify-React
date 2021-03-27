@@ -1,0 +1,12 @@
+var aes256 = require("aes256");
+
+var key = "obvwoqcbv21801f19d0zibcoavwpnq";
+
+export const DoEncrypt = (text, callback) => {
+  var encrypted = aes256.encrypt(key, text);
+  callback(encrypted);
+};
+export const DoDecrypt = (cipher) => {
+  var decrypted = aes256.decrypt(key, cipher);
+  return decrypted;
+};
