@@ -48,7 +48,7 @@ const Chat = () => {
     const [socket, setSocket] = useState();
     const [modal, setModal] = useState(false);
     const [lock, setLock] = useState("initial");
-    const [roomType, setRoomType] = useState("");
+    const [roomType, setRoomType] = useState("personal");
     const [messageList, setMessageList] = useState([]);
 
     const ENDPOINT = custom.URL;
@@ -88,7 +88,7 @@ const Chat = () => {
                         setLock("updated");
                     }
                     else if(res.status === 204){
-                        setRoomType(res.data.type);
+                        setRoomType("personal");
                         setMessageList([]);
                         setLock("updated");
                         console.log("No messages");
@@ -137,6 +137,7 @@ const Chat = () => {
         }
         // eslint-disable-next-line
     },[messageList, lock]);
+    
     const addToContact = () => {
         alert("Add to contact in progress");
     }
