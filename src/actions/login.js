@@ -1,6 +1,6 @@
-export const settoken = (sample) => {
+export const setUser = (user) => {
     return{
         type: "LoginModule",
-        userToken: sample
+        userToken: user
     }
 };

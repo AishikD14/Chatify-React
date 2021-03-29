@@ -1,0 +1,17 @@
+.admin-body{
+    text-align: center;
+    table{
+        width: 100%;
+        tbody{
+            tr{
+                td:last-child, td:nth-child(4){
+                    color: red;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    .btn{
+        margin-top: 20px;
+    }
+}

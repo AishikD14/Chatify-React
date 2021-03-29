@@ -59,8 +59,6 @@ class Login extends Component{
                 modalShow: false
             });
             if (res.status === 200) {
-                console.log(res.data);
-                // this.props.setSession(res.data);
                 this.props.setUser(this.state.token);
                 this.props.setSession(res.data);
                 history.push('/home');
@@ -70,7 +68,7 @@ class Login extends Component{
             alert("Something went wrong");
             console.log(error);
         });
-      }
+    }
 
     onChangeEmail(e){
         this.setState({
@@ -94,26 +92,23 @@ class Login extends Component{
             email: this.state.email,
             password: sha256(this.state.password)
         }
-        console.log(user, this.state.remember);
         this.setState({
             modalShow: true
         })
         axios.post(custom.URL + "/user/login",user, custom.options)
             .then(res => {
-                // console.log(res.data.token);
                 if(res.status === 200){
+                    this.props.setUser(res.data.token);
+                    if(remember){
+                        localStorage.setItem('sessionToken',res.data.token);
+                    }
+                    this.setState({
+                        token: res.data.token
+                    })
                     if(user.email === "admin@admin"){
                         history.push('/admin');
                     }
                     else{
-                        this.props.setUser(res.data.token);
-                        // console.log(this.state.remember);
-                        if(remember){
-                            localStorage.setItem('sessionToken',res.data.token);
-                        }
-                        this.setState({
-                            token: res.data.token
-                        })
                         this.checkToken();
                     }
                 }

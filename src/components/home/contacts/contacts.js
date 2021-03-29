@@ -66,7 +66,7 @@ const Contacts = () => {
                 .then((res) => {
                     setModal(false);
                     if(res.status === 200){
-                        setContactList(res.data.filter((contact) => contact.email!==email));
+                        setContactList(res.data.filter((contact) => contact.email!==email && contact.role==="user"));
                     }
                     else{
                         console.log("No contacts");
