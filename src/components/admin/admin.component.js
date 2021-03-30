@@ -56,6 +56,29 @@ const Admin = () => {
         history.push("/");
     }
 
+    const deleteRoom = (room) => {
+        let payload = {
+            "room": room.roomId
+        }
+        setModal(true);
+        axios.post(custom.URL + "/admin/delete_room", payload, custom.options)
+            .then((res) => {
+                setModal(false);
+                if(res.status === 200){
+                    console.log("Room deleted");
+                    let modifiedList = roomList.filter(item => item.roomId !== room.roomId);
+                    setRoomList(modifiedList);
+                }
+                else{
+                    console.log("No such room present");
+                }
+            })
+            .catch((err) => {
+                setModal(false);
+                console.log(err);
+            });
+    }
+
     return(
         <div className="admin-body">
             <h1>Admin Portal</h1>
@@ -80,7 +103,7 @@ const Admin = () => {
                                 <td>{room.type}</td>
                                 <td>{room.messageNo}</td>
                                 <td>Clear All</td>
-                                <td>Delete Room</td>
+                                <td onClick={() => {deleteRoom(room)}}>Delete Room</td>
                             </tr>
                         )
                     })}
