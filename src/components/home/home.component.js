@@ -74,7 +74,6 @@ class Home extends Component{
                     modalShow: false
                 })
                 if (res.status === 200) {
-                    // console.log(res.data);
                     this.props.setSession(res.data);
                 }
                 else{

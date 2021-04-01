@@ -143,8 +143,8 @@ const Admin = () => {
                     })}
                 </tbody>
             </table>
-            <button type="button" className="btn btn-primary" onClick={logout}>Logout</button>
             <button type="button" className="btn btn-success" onClick={getRoomList}>Refresh</button>
+            <button type="button" className="btn btn-primary" onClick={logout}>Logout</button>
         </div>
     )
 }
