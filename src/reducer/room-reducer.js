@@ -14,6 +14,11 @@ export const roomReducer = (state = initialState, action) => {
             return {
                 showChat: false,
                 showContact: true
+            };
+        case "roomLogoutModule":
+            return {
+                showChat: false,
+                showContact: false
             }; 
         default:
             return state;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {setChat} from '../../../actions/chat';
-import {setRoomChat} from '../../../actions/room';
+import {setRoomChat, setRoomLogout} from '../../../actions/room';
 import {setView} from '../../../actions/session';
 import custom from '../../environment';
 import history from '../../../history';
@@ -51,6 +51,7 @@ const Contacts = () => {
     },[tokens, pictures, versions, emails]);
     
     const logoutHandleClose = () => {
+        dispatch(setRoomLogout());
         localStorage.setItem('sessionToken', '');
         history.push("/");
     }

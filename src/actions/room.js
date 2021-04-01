@@ -9,3 +9,9 @@ export const setRoomContact = () => {
         type: "roomContactModule"
     }
 };
+
+export const setRoomLogout = () => {
+    return{
+        type: "roomLogoutModule"
+    }
+};
