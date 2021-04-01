@@ -179,5 +179,20 @@
         h1{
             padding-top: 20px;
         }
+        .btn{
+            margin-top: 15px;
+            display: none;
+        }
+    }
+}
+
+@media(max-width: 767px){
+    .chat{
+        .contact-info-body{
+            .btn{
+                display: block;
+                margin: auto;
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {setView} from '../../../actions/session';
-import {setRoomContact} from '../../../actions/room';
+import {setRoomChat, setRoomContact} from '../../../actions/room';
 import custom from '../../environment';
 import { DoEncrypt, DoDecrypt } from '../../../aes';
 // import history from '../../../history';
@@ -213,6 +213,10 @@ const Chat = () => {
         dispatch(setView(view));
     }
 
+    const goBack = () => {
+        dispatch(setRoomChat());
+    }
+
     const kebab = () => {
         // var middle = document.querySelector('.middle1');
         // var cross = document.querySelector('.cross1');
@@ -276,6 +280,7 @@ const Chat = () => {
                 <h3>{chatName}</h3>
                 <h4>Status:&nbsp;{status}</h4>
                 <h4>Last login:&nbsp;{lastLogin}</h4>
+                <button type="button" className="btn btn-primary" onClick={goBack}>Go Back</button>
             </div>}
         </div>
     )
