@@ -1,14 +1,20 @@
 const initialState = {
-    showChat: false
+    showChat: false,
+    showContact: false
 };
 
 export const roomReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "roomModule":
+        case "roomChatModule":
             return {
-                showChat: action.showChat
+                showChat: true,
+                showContact: false
             };
-            
+        case "roomContactModule":
+            return {
+                showChat: false,
+                showContact: true
+            }; 
         default:
             return state;
             

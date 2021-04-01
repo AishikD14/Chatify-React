@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {setView} from '../../../actions/session';
+import {setRoomContact} from '../../../actions/room';
 import custom from '../../environment';
 import { DoEncrypt, DoDecrypt } from '../../../aes';
 // import history from '../../../history';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { sha256 } from 'js-sha256';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -40,12 +41,15 @@ const Chat = () => {
     const selfName = useSelector(state => state.session.userName);
     const selfEmail = useSelector(state => state.session.email);
     const showChat = useSelector(state => state.room.showChat);
+    const showContact = useSelector(state => state.room.showContact);
 
     const dispatch = useDispatch();
 
     const [message, setMessage] = useState("");
     const [random, setRandom] = useState(0);
     const [socket, setSocket] = useState();
+    const [status, setStatus] = useState("");
+    const [lastLogin, setLastLogin] = useState("");
     const [modal, setModal] = useState(false);
     const [lock, setLock] = useState("initial");
     const [roomType, setRoomType] = useState("personal");
@@ -142,6 +146,30 @@ const Chat = () => {
         alert("Add to contact in progress");
     }
 
+    const contactInfo = () => {
+        let payload = {
+            "email": chatEmail
+        }
+        setModal(true);
+        axios.post(custom.URL + "/user/get_contact_info", payload, custom.options)
+            .then((res) => {
+                setModal(false);
+                if(res.status === 200){
+                    setStatus(res.data.status);
+                    setLastLogin(res.data.lastLogin.substring(0,10));
+                    dispatch(setRoomContact());
+                }
+                else if(res.status === 204){
+                    dispatch(setRoomContact());
+                    console.log("Profile not found");
+                }
+            })
+            .catch((err) => {
+                setModal(false);
+                console.log(err);
+            });
+    }
+
     const onChangeMessage = (e) => {
         setMessage(e.target.value);
     }
@@ -200,7 +228,7 @@ const Chat = () => {
             {modal && <div className="spinner-body">
                 <div className="spinner-border text-success" role="status"></div>
             </div>}
-            {!showChat && <div className="start-chat">
+            {!showChat && !showContact && <div className="start-chat">
                 <div className="img">
                     <img src={require("../../../assets/login.svg")} alt="background"/>
                 </div>
@@ -223,7 +251,7 @@ const Chat = () => {
                                 <p className="cross1">x</p>
                                 <figure></figure>
                                 <ul className="dropdown1">
-                                <li><Link to={"/contact_info"}>Contact Info</Link></li>
+                                <li><p onClick={contactInfo}>Contact Info</p></li>
                                 <li><p onClick={addToContact}>Add to contacts</p></li>
                                 </ul>
                             </div>
@@ -239,6 +267,15 @@ const Chat = () => {
                         <input type="submit" className="btn" value="Send" />
                     </form>
                 </div>
+            </div>}
+            {showContact && <div className="contact-info-body">
+                <h1>Contact Info</h1>
+                <CloudinaryContext cloudName="chatify">
+                    <Image publicId={chatPicture} version={chatPicVersion} />
+                </CloudinaryContext>
+                <h3>{chatName}</h3>
+                <h4>Status:&nbsp;{status}</h4>
+                <h4>Last login:&nbsp;{lastLogin}</h4>
             </div>}
         </div>
     )

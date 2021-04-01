@@ -1,6 +1,11 @@
-export const setRoom = (data) => {
+export const setRoomChat = () => {
     return{
-        type: "roomModule",
-        showChat: data
+        type: "roomChatModule"
+    }
+};
+
+export const setRoomContact = () => {
+    return{
+        type: "roomContactModule"
     }
 };
